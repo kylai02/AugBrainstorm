@@ -10,8 +10,8 @@ public class Prompts : MonoBehaviour
     }
 
     public string GenerateKeywordsPrompt(   // new function
-        List<string> preKeywords,   // former path of keywords (include the current one)
-        int requestKeywordNumber,   // how many new keywords to generate
+        string[] preKeywords,   // former path of keywords (include the current one)
+        int requestKeywordNumber   // how many new keywords to generate
     )
     {
         string request = "";    // prompt for ChatGPT
@@ -387,8 +387,6 @@ public class Prompts : MonoBehaviour
 //         return request;
 
 //     }
-
-}
 /// <summary>-------   Derived keywords V2    ------- </summary>    
 // public string PromptWithPreviousKeywordsAndContext(string keyword, string previousKeywordsToString, string previousContext, int requestKeywordNumber, bool context, bool keywords) {
 
