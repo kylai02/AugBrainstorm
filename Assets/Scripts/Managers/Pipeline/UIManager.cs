@@ -10,9 +10,11 @@ public class UIManager : MonoBehaviour {
   [SpaceAttribute(10)]
   public List<TMP_Text> keywordsText;
 
+  public List<string> selectedKeywords;
+  public List<string> contextKeywords;
+
   public static UIManager instance;
   
-  public List<string> contextKeywords;
 
   void Awake() {
     if (!instance) instance = this;
@@ -35,10 +37,14 @@ public class UIManager : MonoBehaviour {
       Debug.Log(contextKeywords.Capacity);
     }
 
-    updateKeywordButtons();
+    UpdateKeywordButtons();
   }
 
-  private void updateKeywordButtons() {
+  public void AddSelectedWord(string s) {
+    selectedKeywords.Add(s);
+  }
+
+  private void UpdateKeywordButtons() {
     for (int i = 0; i < 8; ++i) {
       int targetIndex = contextKeywords.Count - 1 - i;
 
