@@ -28,69 +28,96 @@ public class Prompts : MonoBehaviour {
   ) {
     string request = "";
 
-        /// <summary>-------   Listing information if needed    ------- </summary>    
-
         request +=
+        
+        "I would like to conduct an English keyword brainstorming. Please use the provided thought path tree to generate 3 keywords related to this path. The further along the path tree a word is, the stronger the relevance should be to the three generated keywords." + "\n" +
 
-        "Context: " + "" + context + "GazeNoter: Co-Piloted AR Note-Taking via Gaze Selection of Large LanguageModels Suggestions to Match Users’ Intentions. Note-taking is critical in speeches and discussions for not only afterward summarization and organization but also real-time question and opinion reminding in question-and-answer sessions or appropriate timing in discussions. Manually typing on smartphones for note-taking could distract users and increase the cognitive load. Some methods leverage large language models (LLM) to automatically generate summaries and highlights, but without user input or interaction, the artificial intelligence (AI) generative content may not match users’ intentions. Therefore, we propose an AI-copiloted augmented reality (AR) system, GazeNoter, to allow users to swiftly select LLM-generated suggestions via gaze on an AR headset for real-time note-taking. GazeNoter combines the diverse suggestion generation of LLM and efficient gaze selection of AR headsets to achieve user-in-the-loop real-time note-taking matching users’ intentions. We conducted a user study to verify the usability of GazeNoter and performed a case study to observe and showcase the real-time note-taking of GazeNoter in the face-to-face discussion." + "\n"
-         + "List of Words That Do Not Overlap With: " + "\n"
-         + currentContextKeywords;
+        "The term 'keywords' can also include names of people, places, proper nouns, and so on, without any specific restrictions. The new keywords generated doesn't have to be synonyms. Could be related in any way." + "\n" +
 
-        /// <summary>-------  Add previous keywords    ------- </summary> 
-        if (keywords)
-        {
+        // "The generated words must not overlap with the following words, nor have the same the lemma of a word, which are listed as follows: " + "\n" +
+        // currentContextKeywords + previousKeywordsToString + "\n" +
 
-            request +=
+        // "I repeat, The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
+        // currentContextKeywords + previousKeywordsToString + "\n" +
 
-            ", " + previousKeywordsToString + "\n";
+        // "This is very important." + "\n" +
+        // "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n" +
+        // "Generate as much as you could as long as it does not overlaps, any related words would do. ";
 
-        }
+        "The direction of nodes in the path tree is represented by ->, with the first word in the path being the root node and the last word being the current leaf node." + "\n" +
 
-        else
-        {
+        "Please do not alter or extend this path but generate three possible new leaf nodes from the existing leaf nodes of this path tree." + "\n" +
 
-            request += "\n";
+        "If there is only one word in the path, it means that only that word is under consideration. Please generate 3 new keywords based on that word as well." + "\n" +
 
-        }
+        "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
+
+        "Here is my current path of thought:" + "\n" +
+        "Music -> instrument -> Guitar"; // Path of thought
+
+        // /// <summary>-------   Listing information if needed    ------- </summary>    
+
+        // request +=
+
+        // "Context: " + "" + context + "GazeNoter: Co-Piloted AR Note-Taking via Gaze Selection of Large LanguageModels Suggestions to Match Users’ Intentions. Note-taking is critical in speeches and discussions for not only afterward summarization and organization but also real-time question and opinion reminding in question-and-answer sessions or appropriate timing in discussions. Manually typing on smartphones for note-taking could distract users and increase the cognitive load. Some methods leverage large language models (LLM) to automatically generate summaries and highlights, but without user input or interaction, the artificial intelligence (AI) generative content may not match users’ intentions. Therefore, we propose an AI-copiloted augmented reality (AR) system, GazeNoter, to allow users to swiftly select LLM-generated suggestions via gaze on an AR headset for real-time note-taking. GazeNoter combines the diverse suggestion generation of LLM and efficient gaze selection of AR headsets to achieve user-in-the-loop real-time note-taking matching users’ intentions. We conducted a user study to verify the usability of GazeNoter and performed a case study to observe and showcase the real-time note-taking of GazeNoter in the face-to-face discussion." + "\n"
+        //  + "List of Words That Do Not Overlap With: " + "\n"
+        //  + currentContextKeywords;
+
+        // /// <summary>-------  Add previous keywords    ------- </summary> 
+        // if (keywords)
+        // {
+
+        //     request +=
+
+        //     ", " + previousKeywordsToString + "\n";
+
+        // }
+
+        // else
+        // {
+
+        //     request += "\n";
+
+        // }
 
 
-        request +=
+        // request +=
 
-        "Main Keyword: " + keyword + "\n";
+        // "Main Keyword: " + keyword + "\n";
 
-        /// <summary>-------   keywords ...    ------- </summary>   
+        // /// <summary>-------   keywords ...    ------- </summary>   
 
-        request +=
+        // request +=
 
-        "Based on the above-mentioned Context, which is also showed as follow:  " + context + "\n" +
-        "Generate " + requestKeywordNumber + " words that are related to the Main keyword: " + keyword + ", doesn't have to be synonyms. Could be related in any way. " + "\n" +
-        //"The generated words must not overlap with the words in the above-mentioned List of Words That Do Not Overlap With nor have the same the lemma of a word, which are also listed as follows: " + "\n" + 
-        //"List of Words That Do Not Overlap With: " + currentContextKeywords + previousKeywordsToString + "\n" +
-        "The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
-        currentContextKeywords + previousKeywordsToString + "\n" + //  previousKeywordsToString + "\n" + 
-        "I repeat, The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
-        currentContextKeywords + previousKeywordsToString + "\n" + //+ previousKeywordsToString
-        "This is very important." + "\n" +
-        "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n" +
-        "Generate as much as you could as long as it does not overlaps, any related words would do. ";
-
-        // "Based on the above-mentioned Context, which is also showed as follow:  " + context + "\n" + 
-        // "Generate " + requestKeywordNumber + " words that are related to the Main keyword: "  + keyword +  ", doesn't have to be synonyms. Could be related in any way. " + "\n" +
+        // "Based on the above-mentioned Context, which is also showed as follow:  " + context + "\n" +
+        // "Generate " + requestKeywordNumber + " words that are related to the Main keyword: " + keyword + ", doesn't have to be synonyms. Could be related in any way. " + "\n" +
         // //"The generated words must not overlap with the words in the above-mentioned List of Words That Do Not Overlap With nor have the same the lemma of a word, which are also listed as follows: " + "\n" + 
         // //"List of Words That Do Not Overlap With: " + currentContextKeywords + previousKeywordsToString + "\n" +
         // "The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
-        // currentContextKeywords + previousKeywordsToString  + "\n" + //  previousKeywordsToString + "\n" + 
+        // currentContextKeywords + previousKeywordsToString + "\n" + //  previousKeywordsToString + "\n" + 
         // "I repeat, The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
-        // currentContextKeywords + previousKeywordsToString  + "\n" + //+ previousKeywordsToString
-        // "This is very important." + "\n" + 
-        // "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n" + 
+        // currentContextKeywords + previousKeywordsToString + "\n" + //+ previousKeywordsToString
+        // "This is very important." + "\n" +
+        // "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n" +
         // "Generate as much as you could as long as it does not overlaps, any related words would do. ";
 
-        /// <summary>-------   format    ------- </summary>   
+        // // "Based on the above-mentioned Context, which is also showed as follow:  " + context + "\n" + 
+        // // "Generate " + requestKeywordNumber + " words that are related to the Main keyword: "  + keyword +  ", doesn't have to be synonyms. Could be related in any way. " + "\n" +
+        // // //"The generated words must not overlap with the words in the above-mentioned List of Words That Do Not Overlap With nor have the same the lemma of a word, which are also listed as follows: " + "\n" + 
+        // // //"List of Words That Do Not Overlap With: " + currentContextKeywords + previousKeywordsToString + "\n" +
+        // // "The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
+        // // currentContextKeywords + previousKeywordsToString  + "\n" + //  previousKeywordsToString + "\n" + 
+        // // "I repeat, The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
+        // // currentContextKeywords + previousKeywordsToString  + "\n" + //+ previousKeywordsToString
+        // // "This is very important." + "\n" + 
+        // // "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n" + 
+        // // "Generate as much as you could as long as it does not overlaps, any related words would do. ";
 
-        request +=
+        // /// <summary>-------   format    ------- </summary>   
 
-        "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. " + "\n";
+        // request +=
+
+        // "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. " + "\n";
 
         return request;
 
