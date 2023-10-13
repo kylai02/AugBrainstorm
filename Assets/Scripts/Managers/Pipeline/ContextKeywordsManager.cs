@@ -65,15 +65,16 @@ public class ContextKeywordsManager : MonoBehaviour {
 
     List<string> ToBeRemoved = new();
     foreach (string word in ExtractedContextKeywords) {
-        if (StopWords.instance.ForbiddenContextKeywords.Contains(word)) {
+      if (StopWords.instance.ForbiddenContextKeywords.Contains(word)) {
         ToBeRemoved.Add(word);
-        }
+      }
     }
 
     foreach (string s in ToBeRemoved) ExtractedContextKeywords.Remove(s);
-
+    
+    // Send keywords to UIManager
     foreach (string s in ExtractedContextKeywords) {
-      Debug.Log(s);
+      UIManager.instance.contextKeywords.Add(s);
     }
 
 
