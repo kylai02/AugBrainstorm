@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Prompts : MonoBehaviour
 {
@@ -9,8 +10,12 @@ public class Prompts : MonoBehaviour
         instance ??= this;
     }
 
+  /// <summary>--------------------------------------------------------- </summary> 
+  /// <summary>----------   Prompt to generate new keywords   ---------- </summary> 
+  /// <summary>--------------------------------------------------------- </summary>     
+
     public string GenerateKeywordsPrompt(   // new function
-        string[] preKeywords,   // former path of keywords (include the current one)
+        List<string> preKeywords,   // former path of keywords (include the current one)
         int requestKeywordNumber   // how many new keywords to generate
     )
     {
@@ -27,11 +32,11 @@ public class Prompts : MonoBehaviour
         "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
         "Here is my current path of thought:" + "\n";
 
-        for(int i = 0 ; i < preKeywords.Length ; i++)   // form the thought path
+        for(int i = 0 ; i < preKeywords.Count ; i++)   // form the thought path
         {
             path += preKeywords[i];
 
-            if(i != preKeywords.Length - 1)
+            if(i != preKeywords.Count - 1)
             {
                 path += " -> ";
             }
