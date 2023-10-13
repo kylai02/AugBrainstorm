@@ -4,43 +4,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.VisualScripting;
 
-public class GeneratedKeywordsManager : MonoBehaviour
-{
-    [SpaceAttribute(10)]
-    [HeaderAttribute("-------   Reference    ------- ")]
-    [SpaceAttribute(10)]
+public class GeneratedKeywordsManager : MonoBehaviour {
+  [SpaceAttribute(10)]
+  [HeaderAttribute("-------   Reference    ------- ")]
+  [SpaceAttribute(10)]
 
-    public int requestKeywordNumber;
+  public int requestKeywordNumber;
 
-    public static GeneratedKeywordsManager instance;
+  public static GeneratedKeywordsManager instance;
 
-    // --- For testing ---
-    private List<string> preKeywords = new List<string>{"Music", "Genre", "Rock"};
-    private float execRate = 10.0f;
-    private float nextExec = 0.0f;
+  // --- For testing ---
+  private List<string> preKeywords = new List<string>{"Music", "Genre", "Rock"};
+  private float execRate = 10.0f;
+  private float nextExec = 0.0f;
 
-    void Awake()
-    {
-        if (instance == null) instance = this;
+  void Awake() {
+    if (instance == null) instance = this;
+  }
+
+  void Update() {
+    if (Time.time > nextExec) {   // For testing, execute every 10 seconds
+      nextExec = Time.time + execRate;
+      updateGeneratedKeywords();
     }
+  }
 
-    void Update()
-    {
-        if (Time.time > nextExec)   // For testing, execute every 10 seconds
-        {
-            nextExec = Time.time + execRate;
-            updateGeneratedKeywords();
-        }
-    }
+  /// <summary>-------   Generate new keywords and place it   -------</summary>
+  private async void updateGeneratedKeywords() {
+    List<string> ExtractedGeneratedKeywords = 
+      await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
+        preKeywords, 
+        requestKeywordNumber
+      );
 
-    /// <summary>-------   Generate new keywords and place it   -------</summary>
-    private async void updateGeneratedKeywords()
-    {
-
-        List<string> ExtractedGeneratedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(preKeywords, requestKeywordNumber);
-
-        if (ExtractedGeneratedKeywords == null || ExtractedGeneratedKeywords.Count == 0)
-            return;
+    if (ExtractedGeneratedKeywords == null || ExtractedGeneratedKeywords.Count == 0)
+      return;
 
         // List<string> ToBeRemoved = new();
         // foreach (string word in ExtractedGeneratedKeywords)
@@ -53,11 +51,10 @@ public class GeneratedKeywordsManager : MonoBehaviour
 
         // foreach (string s in ToBeRemoved) ExtractedGeneratedKeywords.Remove(s);
 
-        foreach (string s in ExtractedGeneratedKeywords)
-        {
-            Debug.Log(s);
-        }
+    foreach (string s in ExtractedGeneratedKeywords) {
+      Debug.Log(s);
     }
+  }
 
     // /// <summary>------------------------------------------------------------- </summary> 
     // /// <summary>-------   Context keyword placement in full mode    --------- </summary> 

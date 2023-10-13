@@ -26,42 +26,47 @@ namespace OpenAI
     /// <summary>-------   Generate new keywords from previous thought path   ------- </summary> 
     /// <summary>-------------------------------------------------------------------- </summary>     
 
-    public async Task<List<string>> GetGeneratedKeywordsOpenAI(List<string> preKeywords, int requestKeywordNumber)
-    {
-      string OpenAIResponse = await RequestGeneratedKeywordsOpenAI(preKeywords, requestKeywordNumber);
-      List<string> generatedKeywordsList = ExtractWithDifferentFormat(OpenAIResponse, 20);
+    public async Task<List<string>> GetGeneratedKeywordsOpenAI(
+      List<string> preKeywords, 
+      int requestKeywordNumber
+    ) {
+      string OpenAIResponse = 
+        await RequestGeneratedKeywordsOpenAI(preKeywords, requestKeywordNumber);
+      List<string> generatedKeywordsList = 
+        ExtractWithDifferentFormat(OpenAIResponse, 20);
 
       // Still wrong format or nothing is generated
-      if (generatedKeywordsList == null || generatedKeywordsList.Count < 2)
-      {
+      if (generatedKeywordsList == null || generatedKeywordsList.Count < 2) {
         Debug.Log("Regenerate Keywords");
         // Retry once
-        string secondOpenAIResponse = await RequestGeneratedKeywordsOpenAI(preKeywords, requestKeywordNumber);
-        List<string> secondgeneratedKeywordsList = ExtractWithDifferentFormat(secondOpenAIResponse, 20);
+        string secondOpenAIResponse = 
+          await RequestGeneratedKeywordsOpenAI(preKeywords, requestKeywordNumber);
+        List<string> secondgeneratedKeywordsList = 
+          ExtractWithDifferentFormat(secondOpenAIResponse, 20);
 
         return secondgeneratedKeywordsList;
       }
-      else
-      {
+      else {
         return generatedKeywordsList;
       }
     }
 
-    private async Task<string> RequestGeneratedKeywordsOpenAI(List<string> preKeywords, int requestKeywordNumber)
-    {
+    private async Task<string> RequestGeneratedKeywordsOpenAI(
+      List<string> preKeywords, 
+      int requestKeywordNumber
+    ) {
       // Format of message user's gonna send
-      ChatMessage newMessage = new()
-      {
+      ChatMessage newMessage = new() {
         Role = "user",
-        Content = Prompts.instance.GenerateKeywordsPrompt(preKeywords, requestKeywordNumber)
+        Content = 
+          Prompts.instance.GenerateKeywordsPrompt(preKeywords, requestKeywordNumber)
       };
 
       generatedKeywordsMessages.Clear();
       generatedKeywordsMessages.Add(newMessage);
 
       var GeneratedKeywordsResponse =
-        await openai.CreateChatCompletion(new CreateChatCompletionRequest()
-        {
+        await openai.CreateChatCompletion(new CreateChatCompletionRequest() {
           Model = "gpt-3.5-turbo",
           Messages = generatedKeywordsMessages,
           Temperature = 0.5f,
@@ -72,8 +77,10 @@ namespace OpenAI
         });
 
       // Make sure there's text generated
-      if (GeneratedKeywordsResponse.Choices != null && GeneratedKeywordsResponse.Choices.Count > 0)
-      {
+      if (
+        GeneratedKeywordsResponse.Choices != null && 
+        GeneratedKeywordsResponse.Choices.Count > 0
+      ) {
         var message = GeneratedKeywordsResponse.Choices[0].Message;
 
         message.Content = message.Content.Trim(); // Trim result
@@ -81,8 +88,7 @@ namespace OpenAI
 
         return message.Content;
       }
-      else
-      {
+      else {
         return null;
       }
     }
