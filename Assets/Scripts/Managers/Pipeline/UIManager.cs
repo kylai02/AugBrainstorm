@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour {
   public List<string> selectedKeywords;
   public List<string> contextKeywords;
 
-  public Node root;
+  public KeywordNode root;
 
   public static UIManager instance;
   
@@ -25,10 +25,6 @@ public class UIManager : MonoBehaviour {
     if (!instance) instance = this;
 
     contextKeywords = new List<string>();
-
-    root = new Node();
-    root.keyword = "root";
-    root.parent = root;
   }
 
   // void Start() {
@@ -56,13 +52,12 @@ public class UIManager : MonoBehaviour {
       Debug.Log(contextKeywords.Capacity);
     }
 
+    // DEBUG: test node UI
     if (Input.GetKeyDown(KeyCode.A)) {
-      Node cur = root;
-      while (cur.children.Count > 0) {
-        cur = cur.children[0];
-      }
+      KeywordNode cur = root;
+      while (cur.children.Count > 0) cur = cur.children[0];
 
-      NewKeywordNode("aaaaa", cur, cur == root ? null : cur.nodeObj);
+      NewKeywordNode("aaaaa", cur);
     }
 
     UpdateKeywordButtons();
@@ -72,21 +67,18 @@ public class UIManager : MonoBehaviour {
     selectedKeywords.Add(s);
   }
 
-  public void NewKeywordNode(
-    string keyword, 
-    Node parentNode, 
-    KeywordNode parent=null
-  ) {
+  public void NewKeywordNode(string keyword, KeywordNode parent) {
     GameObject newNodeObj = Instantiate(keywordNodeObj);
     newNodeObj.transform.SetParent(tree.transform);
-    Node newNode = newNodeObj.GetComponent<KeywordNode>().node;
+
+    KeywordNode newNode = newNodeObj.GetComponent<KeywordNode>();
 
     newNode.keyword = keyword;
-    newNode.parent = parentNode;
-    parentNode.children.Add(newNode);
+    newNode.parent = parent;
+    parent.children.Add(newNode);
     newNodeObj.GetComponentInChildren<TMP_Text>().text = keyword;
 
-    if (parent) {
+    if (parent != root) {
       newNodeObj.transform.localPosition = new Vector3(
         parent.transform.localPosition.x + 200,
         parent.transform.localPosition.y,

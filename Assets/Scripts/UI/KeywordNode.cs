@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Node {
-  public string keyword;
-  public Node parent;
-  public List<Node> children;
-  public KeywordNode nodeObj;
+// public class Node {
+//   public string keyword;
+//   public Node parent;
+//   public List<Node> children;
+//   public KeywordNode nodeObj;
 
-  public Node() {
-    children = new List<Node>();
-  }
-}
-
+//   public Node() {
+//     children = new List<Node>();
+//   }
+// }
 
 public class KeywordNode : MonoBehaviour {
-  public Node node;
+  public string keyword;
+  public KeywordNode parent;
+  public List<KeywordNode> children;
 
   void Awake() {
-    node = new Node();
-    node.nodeObj = this;
+    children = new List<KeywordNode>();
   }
 }
