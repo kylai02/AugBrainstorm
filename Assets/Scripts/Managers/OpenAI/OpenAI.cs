@@ -6,9 +6,7 @@ using System;
 namespace OpenAI {
   public class OpenAI : MonoBehaviour {
     /// <summary>-------   Related Keywords Message History    ------- </summary> 
-    private List<ChatMessage> relatedKeywordsMessages = new List<ChatMessage>();
-    private List<ChatMessage> contextKeywordsMessages = new List<ChatMessage>();
-    private List<ChatMessage> generateSentencesMessages = new List<ChatMessage>();
+    private List<ChatMessage> generatedKeywordsMessages = new List<ChatMessage>();
 
     /// <summary>-------   API    ------- </summary> 
     private readonly OpenAIApi openai = new();
@@ -20,56 +18,42 @@ namespace OpenAI {
       instance ??= this;
     }
 
-    /// <summary>--------------------------------------------------------- </summary> 
-    /// <summary>-------   Extract context keywords from speech    ------- </summary> 
-    /// <summary>--------------------------------------------------------- </summary>     
+    /// <summary>-------------------------------------------------------------------- </summary> 
+    /// <summary>-------   Generate new keywords from previous thought path   ------- </summary> 
+    /// <summary>-------------------------------------------------------------------- </summary>     
 
-    public async Task<List<string>> GetContextKeywordsOpenAI(string newInput) {
-      string OpenAIResponse = await RequestContextKeywordsOpenAI(newInput);
-      List<string> contextKeywordsList = ExtractWithDifferentFormat(OpenAIResponse, 20);
+    public async Task<List<string>> GetGeneratedKeywordsOpenAI(string newInput) {
+      string OpenAIResponse = await RequestGeneratedKeywordsOpenAI(newInput);
+      List<string> generatedKeywordsList = ExtractWithDifferentFormat(OpenAIResponse, 20);
       
       // Still wrong format or nothing is generated
-      if (contextKeywordsList == null || contextKeywordsList.Count < 2) {
-        Debug.Log("Regenerate Context Keywords");
+      if (generatedKeywordsList == null || generatedKeywordsList.Count < 2) {
+        Debug.Log("Regenerate Keywords");
         // Retry once
-        string secondOpenAIResponse = await RequestContextKeywordsOpenAI(newInput); 
-        List<string> secondcontextKeywordsList = 
-        ExtractWithDifferentFormat(secondOpenAIResponse, 20);
+        string secondOpenAIResponse = await RequestGeneratedKeywordsOpenAI(newInput); 
+        List<string> secondgeneratedKeywordsList = ExtractWithDifferentFormat(secondOpenAIResponse, 20);
                 
-        return secondcontextKeywordsList;
-
+        return secondgeneratedKeywordsList;
       }
       else {
-        return contextKeywordsList;
+        return generatedKeywordsList;
       }
     }
 
-    private async Task<string> RequestContextKeywordsOpenAI(string newInput) {
+    private async Task<string> RequestGeneratedKeywordsOpenAI(string newInput) {
       // Format of message user's gonna send
       ChatMessage newMessage = new() {
         Role = "user",
         Content = FormRequest.instance.FormExtractContextKeywordRequest(newInput)
       };
 
-            // if (ControlPanel.instance.PreserveMessageHistory)
-            // {
+      generatedKeywordsMessages.Clear();
+      generatedKeywordsMessages.Add(newMessage);
 
-            //     contextKeywordsMessages.Add(newMessage);
-
-            // }
-
-            // else
-            // {
-
-                contextKeywordsMessages.Clear();
-                contextKeywordsMessages.Add(newMessage);
-
-            // }
-
-      var ContextKeywordsResponse = 
+      var GeneratedKeywordsResponse = 
         await openai.CreateChatCompletion(new CreateChatCompletionRequest() {
           Model = "gpt-3.5-turbo",
-          Messages = contextKeywordsMessages,
+          Messages = generatedKeywordsMessages,
           Temperature = 0.5f,
           MaxTokens = 50,
           // TopP=1.0f,
@@ -78,8 +62,7 @@ namespace OpenAI {
         });
 
       // Make sure there's text generated
-      if (ContextKeywordsResponse.Choices != null && 
-        ContextKeywordsResponse.Choices.Count > 0) { 
+      if (GeneratedKeywordsResponse.Choices != null && GeneratedKeywordsResponse.Choices.Count > 0) { 
         // Get message
         var message = ContextKeywordsResponse.Choices[0].Message; 
                 
@@ -95,6 +78,82 @@ namespace OpenAI {
         return null;
       }
     }
+
+    // /// <summary>--------------------------------------------------------- </summary> 
+    // /// <summary>-------   Extract context keywords from speech    ------- </summary> 
+    // /// <summary>--------------------------------------------------------- </summary>     
+
+    // public async Task<List<string>> GetContextKeywordsOpenAI(string newInput) {
+    //   string OpenAIResponse = await RequestContextKeywordsOpenAI(newInput);
+    //   List<string> contextKeywordsList = ExtractWithDifferentFormat(OpenAIResponse, 20);
+      
+    //   // Still wrong format or nothing is generated
+    //   if (contextKeywordsList == null || contextKeywordsList.Count < 2) {
+    //     Debug.Log("Regenerate Context Keywords");
+    //     // Retry once
+    //     string secondOpenAIResponse = await RequestContextKeywordsOpenAI(newInput); 
+    //     List<string> secondcontextKeywordsList = 
+    //     ExtractWithDifferentFormat(secondOpenAIResponse, 20);
+                
+    //     return secondcontextKeywordsList;
+
+    //   }
+    //   else {
+    //     return contextKeywordsList;
+    //   }
+    // }
+
+    // private async Task<string> RequestContextKeywordsOpenAI(string newInput) {
+    //   // Format of message user's gonna send
+    //   ChatMessage newMessage = new() {
+    //     Role = "user",
+    //     Content = FormRequest.instance.FormExtractContextKeywordRequest(newInput)
+    //   };
+
+    //         // if (ControlPanel.instance.PreserveMessageHistory)
+    //         // {
+
+    //         //     contextKeywordsMessages.Add(newMessage);
+
+    //         // }
+
+    //         // else
+    //         // {
+
+    //             contextKeywordsMessages.Clear();
+    //             contextKeywordsMessages.Add(newMessage);
+
+    //         // }
+
+    //   var ContextKeywordsResponse = 
+    //     await openai.CreateChatCompletion(new CreateChatCompletionRequest() {
+    //       Model = "gpt-3.5-turbo",
+    //       Messages = contextKeywordsMessages,
+    //       Temperature = 0.5f,
+    //       MaxTokens = 50,
+    //       // TopP=1.0f,
+    //       FrequencyPenalty = 0.8f,
+    //       PresencePenalty = 0.0f
+    //     });
+
+    //   // Make sure there's text generated
+    //   if (ContextKeywordsResponse.Choices != null && 
+    //     ContextKeywordsResponse.Choices.Count > 0) { 
+    //     // Get message
+    //     var message = ContextKeywordsResponse.Choices[0].Message; 
+                
+        
+    //     message.Content = message.Content.Trim(); // Trim result
+    //     contextKeywordsMessages.Add(message); // Append to chat histroy
+
+    //             // ControlPanel.instance.PrintContextKeyword(message.Content);                                                     // Print if needed
+        
+    //     return message.Content;
+    //   }
+    //   else {
+    //     return null;
+    //   }
+    // }
 
         /// <summary>------------------------------------------- </summary> 
         /// <summary>-------   Spawn Related Keywords    ------- </summary> 
