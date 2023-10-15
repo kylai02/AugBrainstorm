@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 7965309778363572927}
   - component: {fileID: 6900969235248184699}
   - component: {fileID: 6760734603115441874}
+  - component: {fileID: -5422884922744100398}
   m_Layer: 5
   m_Name: GeneratedWordBtn
   m_TagString: Untagged
@@ -255,3 +256,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &-5422884922744100398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6367580050780934991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 489cce8c0c3b21149907b2e411b4b183, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
