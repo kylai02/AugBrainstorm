@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour {
 
   public static UIManager instance;
   
+  public KeywordNode selectedNode;
 
   void Awake() {
     if (!instance) instance = this;
@@ -36,6 +37,11 @@ public class UIManager : MonoBehaviour {
   //   KeywordNode c = new KeywordNode("ccccc", a);
   //   a.children.Add(c);
   // }
+
+  void Start() {
+    // DEBUG: init node
+    NewKeywordNode("AR", root);
+  }
 
   void Update() {
 
@@ -65,6 +71,10 @@ public class UIManager : MonoBehaviour {
 
   public void AddSelectedWord(string s) {
     selectedKeywords.Add(s);
+  }
+
+  public void ChoseSelectedNode(KeywordNode node) {
+    selectedNode = node;
   }
 
   public void NewKeywordNode(string keyword, KeywordNode parent) {
