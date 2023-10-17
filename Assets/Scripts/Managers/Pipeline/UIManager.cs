@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour {
   public GameObject keywordNodeObj;
   public GameObject tree;
 
+  public string initKeyword;
+
   public List<string> selectedKeywords;
   public List<string> contextKeywords;
   public List<string> generatedKeywords;
@@ -47,7 +49,7 @@ public class UIManager : MonoBehaviour {
 
   void Start() {
     // DEBUG: init node
-    NewKeywordNode("HCI", root);
+    NewKeywordNode(initKeyword, root);
   }
 
   void Update() {
