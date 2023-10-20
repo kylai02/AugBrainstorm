@@ -32,6 +32,7 @@ public class Prompts : MonoBehaviour
         "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
         "Here is my current path of thought:" + "\n";
 
+        // K1 -> K2 -> K3 -> ...
         for(int i = 0 ; i < preKeywords.Count ; i++)   // form the thought path
         {
             path += preKeywords[i];

@@ -23,10 +23,11 @@ public class GeneratedKeywordsManager : MonoBehaviour {
   }
 
   void Update() {
-    if (Time.time > nextExec) {   // For testing, execute every 10 seconds
-      nextExec = Time.time + execRate;
-      updateGeneratedKeywords();
-    }
+    // DEBUG: For testing, execute every 10 seconds
+    // if (Time.time > nextExec) {   
+    //   nextExec = Time.time + execRate;
+    //   updateGeneratedKeywords();
+    // }
   }
 
   /// <summary>-------   Generate new keywords and place it   -------</summary>
@@ -39,17 +40,6 @@ public class GeneratedKeywordsManager : MonoBehaviour {
 
     if (ExtractedGeneratedKeywords == null || ExtractedGeneratedKeywords.Count == 0)
       return;
-
-        // List<string> ToBeRemoved = new();
-        // foreach (string word in ExtractedGeneratedKeywords)
-        // {
-        //     if (StopWords.instance.ForbiddenContextKeywords.Contains(word))
-        //     {
-        //         ToBeRemoved.Add(word);
-        //     }
-        // }
-
-        // foreach (string s in ToBeRemoved) ExtractedGeneratedKeywords.Remove(s);
 
     foreach (string s in ExtractedGeneratedKeywords) {
       Debug.Log(s);
