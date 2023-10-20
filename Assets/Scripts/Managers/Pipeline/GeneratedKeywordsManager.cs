@@ -9,7 +9,7 @@ public class GeneratedKeywordsManager : MonoBehaviour {
   [HeaderAttribute("-------   Reference    ------- ")]
   [SpaceAttribute(10)]
 
-  public int requestKeywordNumber;
+  public int requestKeywordNumber = 8;
 
   public static GeneratedKeywordsManager instance;
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public class Prompts : MonoBehaviour
@@ -19,31 +20,83 @@ public class Prompts : MonoBehaviour
         int requestKeywordNumber   // how many new keywords to generate
     )
     {
+        int times = 10;    // The importance multiplier between the current node and the previous node
+
+        int keywordNumber = 8;  // For test
+
+        string path20 = "";   // 20% of thought path (1st keyword)
+        string path40 = "";   // 40% of thought path (2nd keyword)
+        string path60 = "";   // 60% of thought path (3rd keyword)
+        string path80 = "";   // 80% of thought path (4th、5th keywords)
+        string path100 = "";   // 100% of thought path (6th、7th、8th keywords)
         string request = "";    // prompt for ChatGPT
-        string path = "";   // thought path
 
-        request +=
-
-        "I would like to conduct an English keyword brainstorming. Please use the provided thought path tree to generate " + requestKeywordNumber + " keywords related to this path. The further along the path tree a word is, the stronger the relevance should be to the " + requestKeywordNumber + " generated keywords." + "\n" +
-        "The term 'keywords' can also include names of people, places, proper nouns, and so on, without any specific restrictions. The new keywords generated doesn't have to be synonyms. Could be related in any way." + "\n" +
-        "The direction of nodes in the path tree is represented by ->, with the first word in the path being the root node and the last word being the current leaf node." + "\n" +
-        "Please do not alter or extend this path but generate " + requestKeywordNumber + " possible new leaf nodes from the existing leaf nodes of this path tree." + "\n" +
-        "If there is only one word in the path, it means that only that word is under consideration. Please generate " + requestKeywordNumber + " new keywords based on that word as well." + "\n" +
-        "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
-        "Here is my current path of thought:" + "\n";
+        int len = preKeywords.Count;    // the length of preKeywords
+        int len20 = (int)Math.Ceiling(len*0.2);
+        int len40 = (int)Math.Ceiling(len*0.4);
+        int len60 = (int)Math.Ceiling(len*0.6);
+        int len80 = (int)Math.Ceiling(len*0.8);
 
         // K1 -> K2 -> K3 -> ...
-        for(int i = 0 ; i < preKeywords.Count ; i++)   // form the thought path
+        for(int i = 0 ; i < len ; i++)   // form the thought path
         {
-            path += preKeywords[i];
+            path100 += preKeywords[i];
 
-            if(i != preKeywords.Count - 1)
+            if(i == len20 - 1)
             {
-                path += " -> ";
+                path20 = path100;
+            }
+            if(i == len40 - 1)
+            {
+                path40 = path100;
+            }
+            if(i == len60 - 1)
+            {
+                path60 = path100;
+            }
+            if(i == len80 - 1)
+            {
+                path80 = path100;
+            }
+
+            if(i != len - 1)
+            {
+                path100 += " -> ";
             }
         }
 
-        request += path;
+        // Debug.Log("20%: " + path20);
+        // Debug.Log("40%: " + path40);
+        // Debug.Log("60%: " + path60);
+        // Debug.Log("80%: " + path80);
+        // Debug.Log("100%: " + path100);
+
+        request +=
+
+        "I would like to conduct an English keyword brainstorming. Please use the provided " + keywordNumber + " thought path tree to generate 1 keywords related to each path." + "\n" +
+        "The further along the path tree a word is, the stronger the relevance should be to the generated keywords. The relevance of each node with the new keyword must be " + times + " times that of the parent node." + "\n" +
+        "The term 'keywords' can also include names of people, places, proper nouns, and so on, without any specific restrictions. The new keywords generated doesn't have to be synonyms. Could be related in any way." + "\n" +
+        "The direction of nodes in the path trees is represented by ->, with the first word in each path being the root node and the last word being the current leaf node." + "\n" +
+        "Please do not alter or extend the paths but generate 1 possible new leaf nodes from the existing leaf nodes of each path trees." + "\n" +
+        "If there is only one word in the path, it means that only that word is under consideration. Please generate new keywords based on that word as well." + "\n" +
+        "If there are cases where multiple thought paths are the same, it is acceptable. Please also help me generate a new keyword for each thought path, while strictly adhering to the rule that all keywords must be distinct from each other." + "\n" +
+        "Notice that the newly generated keywords must not be the same as any banned keywords i provided below, seperated by ->. These " + keywordNumber + " keywords should also be entirely distinct from each other." + "\n" +
+        "Banned keywords: " + path100 + "\n" +
+        "I repeat, the newly generated keywords must not be the same as any banned keywords i provided below, seperated by ->. These " + keywordNumber + " keywords should also be entirely distinct from each other. This is the most important limit, please strictly adhere to it" + "\n" +
+        "Banned keywords: " + path100 + "\n" +
+        "The thought path trees of each keyword are listed below:" + "\n" +
+        "1: " + path20 + "\n" +
+        "2: " + path40 + "\n" +
+        "3: " + path60 + "\n" +
+        "4: " + path80 + "\n" +
+        "5: " + path80 + "\n" +
+        "6: " + path100 + "\n" +
+        "7: " + path100 + "\n" +
+        "8: " + path100 + "\n" +
+        "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
+        "Please strictly adhere to the output format; any output outside of the specified format is not allowed.";
+
+        // Debug.Log("Request: \n" + request + "\n");
 
         return request;
 

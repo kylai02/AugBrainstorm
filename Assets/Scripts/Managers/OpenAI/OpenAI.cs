@@ -32,17 +32,26 @@ namespace OpenAI
     ) {
       string OpenAIResponse = 
         await RequestGeneratedKeywordsOpenAI(preKeywords, requestKeywordNumber);
+
+      // Debug.Log("Response: \n" + OpenAIResponse + "\n");
+
       List<string> generatedKeywordsList = 
         ExtractWithDifferentFormat(OpenAIResponse, 20);
 
+      // Debug.Log("KeywordsList: \n");
+      // foreach(string str in generatedKeywordsList)
+      // {
+      //   Debug.Log(str + "\n");
+      // }
+
       // Still wrong format or nothing is generated
-      if (generatedKeywordsList == null || generatedKeywordsList.Count < 2) {
+      if (generatedKeywordsList == null || generatedKeywordsList.Count < requestKeywordNumber) {
         Debug.Log("Regenerate Keywords");
         // Retry once
         string secondOpenAIResponse = 
           await RequestGeneratedKeywordsOpenAI(preKeywords, requestKeywordNumber);
         List<string> secondgeneratedKeywordsList = 
-          ExtractWithDifferentFormat(secondOpenAIResponse, 20);
+          ExtractWithDifferentFormat(secondOpenAIResponse, 120);  // 20
 
         return secondgeneratedKeywordsList;
       }
@@ -599,36 +608,41 @@ namespace OpenAI
 
       foreach (var word in words)
       {
-        if (!string.IsNullOrWhiteSpace(word))
-        {
-          if (word.Length > maxCharacterNum)
-          {
-            /// <summary>-------   Try parse with comma    ------- </summary>  
-            string[] words2 = responseContent.Split(',');
-
-            foreach (var word2 in words2)
-            {
-              if (!string.IsNullOrWhiteSpace(word2))
-              {
-                if (word2.Length > maxCharacterNum)
-                {
-                  return null;
-                }
-                else
-                {
-                  ExtractedList.Add(word2);
-                }
-
-              }
-
-            }
-          }
-          else
-          {
-            ExtractedList.Add(word);
-          }
-        }
+        ExtractedList.Add(word);
       }
+
+      // foreach (var word in words)
+      // {
+      //   if (!string.IsNullOrEmpty(word)) // IsNullOrWhiteSpace(word)
+      //   {
+      //     if (word.Length > maxCharacterNum)
+      //     {
+      //       /// <summary>-------   Try parse with comma    ------- </summary>  
+      //       string[] words2 = responseContent.Split(',');
+
+      //       foreach (var word2 in words2)
+      //       {
+      //         if (!string.IsNullOrEmpty(word2)) // IsNullOrWhiteSpace(word)
+      //         {
+      //           if (word2.Length > maxCharacterNum)
+      //           {
+      //             return null;
+      //           }
+      //           else
+      //           {
+      //             ExtractedList.Add(word2);
+      //           }
+
+      //         }
+
+      //       }
+      //     }
+      //     else
+      //     {
+      //       ExtractedList.Add(word);
+      //     }
+      //   }
+      // }
 
       return ExtractedList;
     }
