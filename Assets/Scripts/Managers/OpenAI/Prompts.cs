@@ -11,9 +11,9 @@ public class Prompts : MonoBehaviour
         instance ??= this;
     }
 
-  /// <summary>--------------------------------------------------------- </summary> 
-  /// <summary>----------   Prompt to generate new keywords   ---------- </summary> 
-  /// <summary>--------------------------------------------------------- </summary>     
+    /// <summary>--------------------------------------------------------- </summary> 
+    /// <summary>----------   Prompt to generate new keywords   ---------- </summary> 
+    /// <summary>--------------------------------------------------------- </summary>     
 
     public string GenerateKeywordsPrompt(   // new function
         List<string> preKeywords,   // former path of keywords (include the current one)
@@ -32,34 +32,34 @@ public class Prompts : MonoBehaviour
         string request = "";    // prompt for ChatGPT
 
         int len = preKeywords.Count;    // the length of preKeywords
-        int len20 = (int)Math.Ceiling(len*0.2);
-        int len40 = (int)Math.Ceiling(len*0.4);
-        int len60 = (int)Math.Ceiling(len*0.6);
-        int len80 = (int)Math.Ceiling(len*0.8);
+        int len20 = (int)Math.Ceiling(len * 0.2);
+        int len40 = (int)Math.Ceiling(len * 0.4);
+        int len60 = (int)Math.Ceiling(len * 0.6);
+        int len80 = (int)Math.Ceiling(len * 0.8);
 
         // K1 -> K2 -> K3 -> ...
-        for(int i = 0 ; i < len ; i++)   // form the thought path
+        for (int i = 0; i < len; i++)   // form the thought path
         {
             path100 += preKeywords[i];
 
-            if(i == len20 - 1)
+            if (i == len20 - 1)
             {
                 path20 = path100;
             }
-            if(i == len40 - 1)
+            if (i == len40 - 1)
             {
                 path40 = path100;
             }
-            if(i == len60 - 1)
+            if (i == len60 - 1)
             {
                 path60 = path100;
             }
-            if(i == len80 - 1)
+            if (i == len80 - 1)
             {
                 path80 = path100;
             }
 
-            if(i != len - 1)
+            if (i != len - 1)
             {
                 path100 += " -> ";
             }
@@ -74,8 +74,9 @@ public class Prompts : MonoBehaviour
         request +=
 
         "I would like to conduct an English keyword brainstorming. Please use the provided " + keywordNumber + " thought path tree to generate 1 keywords related to each path." + "\n" +
-        "The further along the path tree a word is, the stronger the relevance should be to the generated keywords. The relevance of each node with the new keyword must be " + times + " times that of the parent node." + "\n" +
+        "The further along the path tree a node is, the stronger the relevance should be to the generated keywords. The relevance of each node with the new keyword must be " + times + " times that of the parent node." + "\n" +
         "The term 'keywords' can also include names of people, places, proper nouns, and so on, without any specific restrictions. The new keywords generated doesn't have to be synonyms. Could be related in any way." + "\n" +
+        "Within a node, there may be multiple words separated by commas. The words within the same node need to have the same level of relevance to the generated new keywords." + "\n" +
         "The direction of nodes in the path trees is represented by ->, with the first word in each path being the root node and the last word being the current leaf node." + "\n" +
         "Please do not alter or extend the paths but generate 1 possible new leaf nodes from the existing leaf nodes of each path trees." + "\n" +
         "If there is only one word in the path, it means that only that word is under consideration. Please generate new keywords based on that word as well." + "\n" +
@@ -96,7 +97,7 @@ public class Prompts : MonoBehaviour
         "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
         "Please strictly adhere to the output format; any output outside of the specified format is not allowed.";
 
-        // Debug.Log("Request: \n" + request + "\n");
+        Debug.Log("Request: \n" + request + "\n");
 
         return request;
 
@@ -123,7 +124,7 @@ public class Prompts : MonoBehaviour
 //     string request = "";
 
 //         request +=
-        
+
 //         "I would like to conduct an English keyword brainstorming. Please use the provided thought path tree to generate 3 keywords related to this path. The further along the path tree a word is, the stronger the relevance should be to the three generated keywords." + "\n" +
 
 //         "The term 'keywords' can also include names of people, places, proper nouns, and so on, without any specific restrictions. The new keywords generated doesn't have to be synonyms. Could be related in any way." + "\n" +
