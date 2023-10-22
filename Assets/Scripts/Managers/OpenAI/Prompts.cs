@@ -57,16 +57,23 @@ public class Prompts : MonoBehaviour
                    "of these ideas to each keyword can be randomly determined by you to generate several different concepts.\n\n" +
                    "Ideas can be as divergent as possible, with lower inter-idea correlations being preferable.\n\n" +
                    "Each Idea should be a short name then followed by a newline. On the next line, please provide a description " +
-                   "of up to 10 words.\n\n" +
+                   "of up to " + requestDescriptionLen + " words.\n\n" +
                    "Provide me with the ideas generated above in a format that ideas are separated by a newline, not a comma, " +
                    "and without any numbered list or bullet point. " +
                    "Do not include any additional sentences or punctuation marks in your response. No need to provide the original " +
                    "path; just the words are sufficient. No need to reply with 'Understood' or provide reasons.\n\n" +
                    "Please do not present the output in the form of a numbered or bulleted list. This is important.\n\n" +
                    "Please also delete all the \"\" and - marks from your response.\n\n" +
-                   "Based on the description above, please come up with three ideas related to all the keywords. " +
-                   "Here is the keyword list I provide:\n" +
-                   "Basketball, Sci-fi, Anime";
+                   "Based on the description above, please come up with " + requestIdeaNumber + " ideas related to all the keywords. " +
+                   "Here is the keyword list I provide:\n";
+        
+        for(int i = 0 ; i < selectedKeywords.Count ; i++)
+        {
+            request += selectedKeywords[i];
+            if(i != selectedKeywords.Count - 1){
+                request += ", ";
+            }
+        }
 
         Debug.Log("Request: \n" + request + "\n");
 
