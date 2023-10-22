@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviour {
 
     contextKeywords = new List<string>();
 
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 8; ++i) {
       generatedKeywords.Add("");
     }
   }
@@ -114,7 +114,7 @@ public class UIManager : MonoBehaviour {
   private async void UpdateGeneratedKeywords() {
     generatedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
       NodePath(),
-      3
+      8
     );
   }
 
@@ -140,7 +140,7 @@ public class UIManager : MonoBehaviour {
   }
 
   private void UpdateGeneratedKeywordsButtons() {
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 8; ++i) {
       generatedText[i].text = generatedKeywords[i];
     }
   }
