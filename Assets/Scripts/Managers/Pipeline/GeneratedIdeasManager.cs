@@ -10,7 +10,7 @@ public class GeneratedIdeasManager : MonoBehaviour {
   [SpaceAttribute(10)]
 
   public int requestIdeaNumber = 3; // how many ideas to generate
-  public int requestDescriptionLen = 50;    // the length limit of each description
+  public int requestDescriptionLen = 12;    // the length limit of each description
 
   public static GeneratedIdeasManager instance;
 
@@ -58,11 +58,11 @@ public class GeneratedIdeasManager : MonoBehaviour {
         }
     }
 
-    // for testing
-    Debug.Log("Ideas and descriptions:");
-    for (int i = 0 ; i < IdeaNames.Count ; i++)
-    {
-        Debug.Log(IdeaNames[i] + "\n" + Descriptions[i]);
-    }
+    // // for testing
+    // Debug.Log("Ideas and descriptions:");
+    // for (int i = 0 ; i < IdeaNames.Count ; i++)
+    // {
+    //     Debug.Log(IdeaNames[i] + "\n" + Descriptions[i]);
+    // }
   }
 }

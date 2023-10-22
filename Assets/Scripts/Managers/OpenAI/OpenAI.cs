@@ -36,7 +36,7 @@ namespace OpenAI
       string OpenAIResponse =
         await RequestGeneratedIdeasOpenAI(selectedKeywords, requestIdeaNumber, requestDescriptionLen);
 
-      // Debug.Log("Response: \n" + OpenAIResponse + "\n");
+      Debug.Log("Response: \n" + OpenAIResponse + "\n");
 
       List<string> responseList = // idea name with even index, description with odd index
         ExtractGeneratedIdeas(OpenAIResponse, 120);
@@ -116,13 +116,31 @@ namespace OpenAI
     public List<string> ExtractGeneratedIdeas(string responseContent, int maxCharacterNum)
     {
       List<string> ExtractedList = new();
+      char colon = ':';
 
       /// <summary>-------   Try parse with new line    ------- </summary>  
       string[] words = responseContent.Split('\n');
 
-      foreach (var word in words)
+      // foreach (var word in words)
+      // {
+      //   if (!string.IsNullOrEmpty(word))
+      //   {
+      //     ExtractedList.Add(word);
+      //   }
+      // }
+
+      for (int i = 0 ; i < words.Length ; ++i)
       {
-        ExtractedList.Add(word);
+        int colonIndex = words[i].IndexOf(colon);
+        if (colonIndex >= 0)
+        {
+          words[i] = words[i].Substring(colonIndex + 1);
+        }
+        
+        if (!string.IsNullOrEmpty(words[i]))
+        {
+          ExtractedList.Add(words[i]);
+        }
       }
 
       return ExtractedList;

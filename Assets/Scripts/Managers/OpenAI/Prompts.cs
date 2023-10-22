@@ -26,25 +26,47 @@ public class Prompts : MonoBehaviour
 
         string request = "";    // prompt for ChatGPT
 
-        request +=
+        // request +=
 
-        "Please help me brainstorm creative ideas through the keyword list I provide." + "\n\n" +
-        "The keywords in the list, seperated by comma, represent terms you need to reference. The generated ideas should be related to all the keywords in this list, but the degree of relevance of these ideas to each keyword can be randomly determined by you to generate several different concepts." + "\n\n" +
-        "Ideas can be as divergent as possible, with lower inter-idea correlations being preferable." + "\n\n" +
-        "Here are the output format requirements. Please strictly adhere to them, and any output that deviates from these guidelines is not allowed:" + "\n" +
-        "1. Each Idea's output consists of two parts: idea name and description. Idea name is the name of the idea, and description is a brief description of up to " + requestDescriptionLen + " words." + "\n" +
-        "2. Use a single line break to separate the idea name and description for each idea, and also use a single line break to separate different ideas." + "\n" +
-        "3. Only provide the name and description for each idea; do not include any additional words or phrases. There is no need to reply with 'Certainly' or 'Sure,' etc." + "\n\n" +
-        "After generating, please review your response content and remove the beginnings such as 'Idea1:', 'Idea2:', 'Idea3:', 'name:', 'description:'and so on." + "\n\n" +
-        "Based on the description above, please come up with " + requestIdeaNumber + " ideas related to all the keywords. Here is the keyword list I provide:" + "\n";
+        // "Please help me brainstorm creative ideas through the keyword list I provide." + "\n\n" +
+        // "The keywords in the list, seperated by comma, represent terms you need to reference. The generated ideas should be related to all the keywords in this list, but the degree of relevance of these ideas to each keyword can be randomly determined by you to generate several different concepts." + "\n\n" +
+        // "Ideas can be as divergent as possible, with lower inter-idea correlations being preferable." + "\n\n" +
+        // "Here are the output format requirements. Please strictly adhere to them, and any output that deviates from these guidelines is not allowed:" + "\n" +
+        // "1. Each Idea's output consists of two parts: idea name and description. Idea name is the name of the idea, and description is a brief description of up to " + requestDescriptionLen + " words." + "\n" +
+        // "2. Use a single line break to separate the idea name and description for each idea." + "\n" +
+        // "3. Only provide the name and description for each idea; do not include any additional words or phrases. There is no need to reply with 'Certainly' or 'Sure,' etc." + "\n\n" +
+        // "Here's an example, If you've come up with two ideas, 'Band rhythm game' and 'Guitar solo festival,' with their respective descriptions being 'A simple music rhythm game where gamers can act as a band member' and 'An event where guitarists can meet each other,' you should output them in the following format:" + "\n" +
+        // "Band rhythm game" + "\n" +
+        // "A simple music rhythm game where gamers can act as a band member" + "\n" +
+        // "Guitar solo festival" + "\n" +
+        // "An event where guitarists can meet each other" + "\n\n" +
+        // "After generating, please review your response content and remove the beginnings such as 'Idea1:', 'Idea2:', 'Idea3:', 'name:', 'description:'and so on." + "\n\n" +
+        // "Based on the description above, please come up with " + requestIdeaNumber + " ideas related to all the keywords. Here is the keyword list I provide:" + "\n";
 
-        for(int i = 0 ; i < selectedKeywords.Count ; i++)
-        {
-            request += selectedKeywords[i];
-            if(i != selectedKeywords.Count - 1){
-                request += ", ";
-            }
-        }
+        // for(int i = 0 ; i < selectedKeywords.Count ; i++)
+        // {
+        //     request += selectedKeywords[i];
+        //     if(i != selectedKeywords.Count - 1){
+        //         request += ", ";
+        //     }
+        // }
+
+        request += "Please help me brainstorm creative ideas through the keyword list I provide.\n\n" +
+                   "The keywords in the list, separated by comma, represent terms you need to reference. " +
+                   "The generated ideas should be related to all the keywords in this list, but the degree of relevance " +
+                   "of these ideas to each keyword can be randomly determined by you to generate several different concepts.\n\n" +
+                   "Ideas can be as divergent as possible, with lower inter-idea correlations being preferable.\n\n" +
+                   "Each Idea should be a short name then followed by a newline. On the next line, please provide a description " +
+                   "of up to 10 words.\n\n" +
+                   "Provide me with the ideas generated above in a format that ideas are separated by a newline, not a comma, " +
+                   "and without any numbered list or bullet point. " +
+                   "Do not include any additional sentences or punctuation marks in your response. No need to provide the original " +
+                   "path; just the words are sufficient. No need to reply with 'Understood' or provide reasons.\n\n" +
+                   "Please do not present the output in the form of a numbered or bulleted list. This is important.\n\n" +
+                   "Please also delete all the \"\" and - marks from your response.\n\n" +
+                   "Based on the description above, please come up with three ideas related to all the keywords. " +
+                   "Here is the keyword list I provide:\n" +
+                   "Basketball, Sci-fi, Anime";
 
         Debug.Log("Request: \n" + request + "\n");
 

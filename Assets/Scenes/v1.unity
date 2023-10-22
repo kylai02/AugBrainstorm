@@ -534,7 +534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requestIdeaNumber: 3
-  requestDescriptionLen: 50
+  requestDescriptionLen: 10
 --- !u!114 &520499348 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7695056462818949369, guid: 95d2afbcc9d0d4940bb014e1839be10b, type: 3}
