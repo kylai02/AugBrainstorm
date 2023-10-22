@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour {
   public List<string> selectedKeywords;
   public List<string> contextKeywords;
   public List<string> generatedKeywords;
+  public List<string> generatedIdeas;
 
   public KeywordNode root;
 
@@ -109,6 +110,14 @@ public class UIManager : MonoBehaviour {
     else {
       newNodeObj.transform.localPosition = new Vector3(-600, -250, 0);
     }
+  }
+
+  public async void GenerateIdea() {
+    generatedIdeas = await OpenAI.OpenAI.instance.GetGeneratedIdeasOpenAI(
+      NodePath(),
+      3,
+      12
+    );
   }
 
   private async void UpdateGeneratedKeywords() {
