@@ -1,0 +1,44 @@
+***Keyword Generation***
+
+Banned keywords: [Prekeywords + Conditions]
+Thought path trees:
+1: [20%path] (Conditions: [Conditions])
+2: [40%path] (Conditions: [Conditions])
+3: [60%path] (Conditions: [Conditions])
+4: [80%path] (Conditions: [Conditions])
+5: [80%path] (Conditions: [Conditions])
+6: [100%path] (Conditions: [Conditions])
+7: [100%path] (Conditions: [Conditions])
+8: [100%path] (Conditions: [Conditions])
+
+I would like to conduct an English keyword brainstorming. Please use the provided [requestKeywordsNumber] thought path tree to generate 1 keywords each, which is related to the cooresponding thought path tree. Those [requestKeywordNumber] generated words should be distinct and must not be the same as any provided Banned keywords. Notice that the [requestKeywordNumber] generated keywords should be under the conditions, provided after each thought path tree.
+
+The further along the thought path tree a node is, the stronger the relevance should be to the generated keywords. The relevance of each node with the new keyword must be [times] times that of the parent node.
+
+Within a node in the thought path tree, there may be multiple words separated by commas. The words within the same node need to have the same level of relevance to the generated new keywords.
+
+If there is only one word in the path, it means that only that word is under consideration. Please generate new keywords based on that word as well.
+
+Please note that for each thought path tree and condition, generate only one new word. Do not generate two words separated by a comma.
+
+Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons.
+
+
+***Idea Generation***
+
+Please help me brainstorm creative ideas through the keyword list I provide.
+ 
+The keywords in the list, seperated by comma, represent terms you need to reference. The generated ideas should be related to all the keywords in this list, but the degree of relevance of these ideas to each keyword can be randomly determined by you to generate several different concepts.
+
+Ideas can be as divergent as possible, with lower inter-idea correlations being preferable.
+
+Each Idea should be a short name then followed by a newline. On the next line, please provide a description of up to [descriptionLen] words.
+
+Provide me with the ideas generated above in a format that ideas are separated by a newline, not a comma, and without any numbered list or bullet point. The output for each idea should be under [nameLen] words. Do not include any additional sentences or punctuation marks in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons.
+
+Please do not present the output in the form of a numbered list. This is important.
+
+Please also delete all the "" and - marks from your response. 
+
+Based on the description above, please come up with [requestIdeasNumber] ideas related to all the keywords. Here is the keyword list I provide:
+[Keyword list]
