@@ -12,14 +12,17 @@ public class UIManager : MonoBehaviour {
   [SpaceAttribute(10)]
   public List<TMP_Text> keywordsText;
   public List<TMP_Text> generatedText;
+  public List<TMP_Text> ideasText;
   public GameObject keywordNodeObj;
   public GameObject tree;
+  public GameObject ideasField;
 
   public string initKeyword;
 
   public List<string> selectedKeywords;
   public List<string> contextKeywords;
   public List<string> generatedKeywords;
+  public List<string> generatedIdeas;
 
   public KeywordNode root;
 
@@ -32,7 +35,7 @@ public class UIManager : MonoBehaviour {
 
     contextKeywords = new List<string>();
 
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 8; ++i) {
       generatedKeywords.Add("");
     }
   }
@@ -85,6 +88,15 @@ public class UIManager : MonoBehaviour {
 
   public void ChoseSelectedNode(KeywordNode node) {
     selectedNode = node;
+    if (selectedKeywords.Count != 0) {
+      foreach (string s in selectedKeywords) {
+        node.keyword += ", ";
+        node.keyword += s;
+      }
+      selectedKeywords.Clear();
+      node.GetComponentInChildren<TMP_Text>().text = node.keyword;
+    }
+
     UpdateGeneratedKeywords();
   }
 
@@ -107,14 +119,28 @@ public class UIManager : MonoBehaviour {
       );
     }
     else {
-      newNodeObj.transform.localPosition = new Vector3(-600, -250, 0);
+      newNodeObj.transform.localPosition = new Vector3(-600, -150, 0);
+    }
+  }
+
+  public async void GenerateIdea() {
+    generatedIdeas = await OpenAI.OpenAI.instance.GetGeneratedIdeasOpenAI(
+      NodePath(),
+      3,
+      12
+    );
+
+    ideasField.SetActive(true);
+    for (int i = 0; i < 4; ++i) {
+      ideasText[i].text = generatedIdeas[i];
     }
   }
 
   private async void UpdateGeneratedKeywords() {
+    ideasField.SetActive(false);
     generatedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
       NodePath(),
-      3
+      8
     );
   }
 
@@ -140,7 +166,7 @@ public class UIManager : MonoBehaviour {
   }
 
   private void UpdateGeneratedKeywordsButtons() {
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 8; ++i) {
       generatedText[i].text = generatedKeywords[i];
     }
   }

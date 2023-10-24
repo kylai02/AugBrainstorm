@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public class Prompts : MonoBehaviour
@@ -10,446 +11,165 @@ public class Prompts : MonoBehaviour
         instance ??= this;
     }
 
-  /// <summary>--------------------------------------------------------- </summary> 
-  /// <summary>----------   Prompt to generate new keywords   ---------- </summary> 
-  /// <summary>--------------------------------------------------------- </summary>     
+    /// <summary>-------------------------------------------------- </summary> 
+    /// <summary>----------   Prompt to generate ideas   ---------- </summary> 
+    /// <summary>-------------------------------------------------- </summary> 
 
-    public string GenerateKeywordsPrompt(   // new function
+    public string GenerateIdeasPrompt(   // form prompt for idea generation
+        List<string> selectedKeywords,   // selected keywords
+        int requestIdeaNumber,   // how many ideas to generate
+        int requestDescriptionLen  // the length limit of each description
+    )
+    {
+        // int ideaNumber = 3;  // For test
+        // int descriptionLen = 3; // For test
+
+        string request = "";    // prompt for ChatGPT
+
+        // request +=
+
+        // "Please help me brainstorm creative ideas through the keyword list I provide." + "\n\n" +
+        // "The keywords in the list, seperated by comma, represent terms you need to reference. The generated ideas should be related to all the keywords in this list, but the degree of relevance of these ideas to each keyword can be randomly determined by you to generate several different concepts." + "\n\n" +
+        // "Ideas can be as divergent as possible, with lower inter-idea correlations being preferable." + "\n\n" +
+        // "Here are the output format requirements. Please strictly adhere to them, and any output that deviates from these guidelines is not allowed:" + "\n" +
+        // "1. Each Idea's output consists of two parts: idea name and description. Idea name is the name of the idea, and description is a brief description of up to " + requestDescriptionLen + " words." + "\n" +
+        // "2. Use a single line break to separate the idea name and description for each idea." + "\n" +
+        // "3. Only provide the name and description for each idea; do not include any additional words or phrases. There is no need to reply with 'Certainly' or 'Sure,' etc." + "\n\n" +
+        // "Here's an example, If you've come up with two ideas, 'Band rhythm game' and 'Guitar solo festival,' with their respective descriptions being 'A simple music rhythm game where gamers can act as a band member' and 'An event where guitarists can meet each other,' you should output them in the following format:" + "\n" +
+        // "Band rhythm game" + "\n" +
+        // "A simple music rhythm game where gamers can act as a band member" + "\n" +
+        // "Guitar solo festival" + "\n" +
+        // "An event where guitarists can meet each other" + "\n\n" +
+        // "After generating, please review your response content and remove the beginnings such as 'Idea1:', 'Idea2:', 'Idea3:', 'name:', 'description:'and so on." + "\n\n" +
+        // "Based on the description above, please come up with " + requestIdeaNumber + " ideas related to all the keywords. Here is the keyword list I provide:" + "\n";
+
+        // for(int i = 0 ; i < selectedKeywords.Count ; i++)
+        // {
+        //     request += selectedKeywords[i];
+        //     if(i != selectedKeywords.Count - 1){
+        //         request += ", ";
+        //     }
+        // }
+
+        request += "Please help me brainstorm creative ideas through the keyword list I provide.\n\n" +
+                   "The keywords in the list, separated by comma, represent terms you need to reference. " +
+                   "The generated ideas should be related to all the keywords in this list, but the degree of relevance " +
+                   "of these ideas to each keyword can be randomly determined by you to generate several different concepts.\n\n" +
+                   "Ideas can be as divergent as possible, with lower inter-idea correlations being preferable.\n\n" +
+                   "Each Idea should be a short name then followed by a newline. On the next line, please provide a description " +
+                   "of up to " + requestDescriptionLen + " words.\n\n" +
+                   "Provide me with the ideas generated above in a format that ideas are separated by a newline, not a comma, " +
+                   "and without any numbered list or bullet point. " +
+                   "Do not include any additional sentences or punctuation marks in your response. No need to provide the original " +
+                   "path; just the words are sufficient. No need to reply with 'Understood' or provide reasons.\n\n" +
+                   "Please do not present the output in the form of a numbered or bulleted list. This is important.\n\n" +
+                   "Please also delete all the \"\" and - marks from your response.\n\n" +
+                   "Based on the description above, please come up with " + requestIdeaNumber + " ideas related to all the keywords. " +
+                   "Here is the keyword list I provide:\n";
+        
+        for(int i = 0 ; i < selectedKeywords.Count ; i++)
+        {
+            request += selectedKeywords[i];
+            if(i != selectedKeywords.Count - 1){
+                request += ", ";
+            }
+        }
+
+        Debug.Log("Request: \n" + request + "\n");
+
+        return request;
+
+    }
+
+    /// <summary>--------------------------------------------------------- </summary> 
+    /// <summary>----------   Prompt to generate new keywords   ---------- </summary> 
+    /// <summary>--------------------------------------------------------- </summary>     
+
+    public string GenerateKeywordsPrompt(   // form prompt for keyword generation
         List<string> preKeywords,   // former path of keywords (include the current one)
         int requestKeywordNumber   // how many new keywords to generate
     )
     {
+        int times = 10;    // The importance multiplier between the current node and the previous node
+
+        int keywordNumber = 8;  // For test
+
+        string path20 = "";   // 20% of thought path (1st keyword)
+        string path40 = "";   // 40% of thought path (2nd keyword)
+        string path60 = "";   // 60% of thought path (3rd keyword)
+        string path80 = "";   // 80% of thought path (4th、5th keywords)
+        string path100 = "";   // 100% of thought path (6th、7th、8th keywords)
         string request = "";    // prompt for ChatGPT
-        string path = "";   // thought path
 
-        request +=
-
-        "I would like to conduct an English keyword brainstorming. Please use the provided thought path tree to generate " + requestKeywordNumber + " keywords related to this path. The further along the path tree a word is, the stronger the relevance should be to the " + requestKeywordNumber + " generated keywords." + "\n" +
-        "The term 'keywords' can also include names of people, places, proper nouns, and so on, without any specific restrictions. The new keywords generated doesn't have to be synonyms. Could be related in any way." + "\n" +
-        "The direction of nodes in the path tree is represented by ->, with the first word in the path being the root node and the last word being the current leaf node." + "\n" +
-        "Please do not alter or extend this path but generate " + requestKeywordNumber + " possible new leaf nodes from the existing leaf nodes of this path tree." + "\n" +
-        "If there is only one word in the path, it means that only that word is under consideration. Please generate " + requestKeywordNumber + " new keywords based on that word as well." + "\n" +
-        "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
-        "Here is my current path of thought:" + "\n";
+        int len = preKeywords.Count;    // the length of preKeywords
+        int len20 = (int)Math.Ceiling(len * 0.2);
+        int len40 = (int)Math.Ceiling(len * 0.4);
+        int len60 = (int)Math.Ceiling(len * 0.6);
+        int len80 = (int)Math.Ceiling(len * 0.8);
 
         // K1 -> K2 -> K3 -> ...
-        for(int i = 0 ; i < preKeywords.Count ; i++)   // form the thought path
+        for (int i = 0; i < len; i++)   // form the thought path
         {
-            path += preKeywords[i];
+            path100 += preKeywords[i];
 
-            if(i != preKeywords.Count - 1)
+            if (i == len20 - 1)
             {
-                path += " -> ";
+                path20 = path100;
+            }
+            if (i == len40 - 1)
+            {
+                path40 = path100;
+            }
+            if (i == len60 - 1)
+            {
+                path60 = path100;
+            }
+            if (i == len80 - 1)
+            {
+                path80 = path100;
+            }
+
+            if (i != len - 1)
+            {
+                path100 += " -> ";
             }
         }
 
-        request += path;
+        // Debug.Log("20%: " + path20);
+        // Debug.Log("40%: " + path40);
+        // Debug.Log("60%: " + path60);
+        // Debug.Log("80%: " + path80);
+        // Debug.Log("100%: " + path100);
+
+        request +=
+
+        "I would like to conduct an English keyword brainstorming. Please use the provided " + keywordNumber + " thought path tree to generate 1 keywords related to each path." + "\n" +
+        "The further along the path tree a node is, the stronger the relevance should be to the generated keywords. The relevance of each node with the new keyword must be " + times + " times that of the parent node." + "\n" +
+        "The term 'keywords' can also include names of people, places, proper nouns, and so on, without any specific restrictions. The new keywords generated doesn't have to be synonyms. Could be related in any way." + "\n" +
+        "Within a node, there may be multiple words separated by commas. The words within the same node need to have the same level of relevance to the generated new keywords." + "\n" +
+        "The direction of nodes in the path trees is represented by ->, with the first word in each path being the root node and the last word being the current leaf node." + "\n" +
+        "Please do not alter or extend the paths but generate 1 possible new leaf nodes from the existing leaf nodes of each path trees." + "\n" +
+        "If there is only one word in the path, it means that only that word is under consideration. Please generate new keywords based on that word as well." + "\n" +
+        "If there are cases where multiple thought paths are the same, it is acceptable. Please also help me generate a new keyword for each thought path, while strictly adhering to the rule that all keywords must be distinct from each other." + "\n" +
+        "Notice that the newly generated keywords must not be the same as any banned keywords i provided below, seperated by ->. These " + keywordNumber + " keywords should also be entirely distinct from each other." + "\n" +
+        "Banned keywords: " + path100 + "\n" +
+        "I repeat, the newly generated keywords must not be the same as any banned keywords i provided below, seperated by ->. These " + keywordNumber + " keywords should also be entirely distinct from each other. This is the most important limit, please strictly adhere to it" + "\n" +
+        "Banned keywords: " + path100 + "\n" +
+        "The thought path trees of each keyword are listed below:" + "\n" +
+        "1: " + path20 + "\n" +
+        "2: " + path40 + "\n" +
+        "3: " + path60 + "\n" +
+        "4: " + path80 + "\n" +
+        "5: " + path80 + "\n" +
+        "6: " + path100 + "\n" +
+        "7: " + path100 + "\n" +
+        "8: " + path100 + "\n" +
+        "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
+        "Please strictly adhere to the output format; any output outside of the specified format is not allowed.";
+
+        Debug.Log("Request: \n" + request + "\n");
 
         return request;
 
     }
 }
-//   /// <summary>--------------------------------------------------------- </summary> 
-//   /// <summary>-------   Extract context keywords from speech    ------- </summary> 
-//   /// <summary>--------------------------------------------------------- </summary>     
-
-
-
-
-//   /// <summary>------------------------------------ </summary> 
-//   /// <summary>-------   Derive keywords    ------- </summary> 
-//   /// <summary>------------------------------------ </summary>  
-//   public string DeriveKeywordsPrompt(
-//     string context, 
-//     string keyword, 
-//     string previousKeywordsToString, 
-//     int requestKeywordNumber, 
-//     string currentContextKeywords, 
-//     bool keywords
-//   ) {
-//     string request = "";
-
-//         request +=
-        
-//         "I would like to conduct an English keyword brainstorming. Please use the provided thought path tree to generate 3 keywords related to this path. The further along the path tree a word is, the stronger the relevance should be to the three generated keywords." + "\n" +
-
-//         "The term 'keywords' can also include names of people, places, proper nouns, and so on, without any specific restrictions. The new keywords generated doesn't have to be synonyms. Could be related in any way." + "\n" +
-
-//         // "The generated words must not overlap with the following words, nor have the same the lemma of a word, which are listed as follows: " + "\n" +
-//         // currentContextKeywords + previousKeywordsToString + "\n" +
-
-//         // "I repeat, The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
-//         // currentContextKeywords + previousKeywordsToString + "\n" +
-
-//         // "This is very important." + "\n" +
-//         // "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n" +
-//         // "Generate as much as you could as long as it does not overlaps, any related words would do. ";
-
-//         "The direction of nodes in the path tree is represented by ->, with the first word in the path being the root node and the last word being the current leaf node." + "\n" +
-
-//         "Please do not alter or extend this path but generate three possible new leaf nodes from the existing leaf nodes of this path tree." + "\n" +
-
-//         "If there is only one word in the path, it means that only that word is under consideration. Please generate 3 new keywords based on that word as well." + "\n" +
-
-//         "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
-
-//         "Here is my current path of thought:" + "\n" +
-//         "Music -> instrument -> Guitar"; // Path of thought
-
-//         // /// <summary>-------   Listing information if needed    ------- </summary>    
-
-//         // request +=
-
-//         // "Context: " + "" + context + "GazeNoter: Co-Piloted AR Note-Taking via Gaze Selection of Large LanguageModels Suggestions to Match Users’ Intentions. Note-taking is critical in speeches and discussions for not only afterward summarization and organization but also real-time question and opinion reminding in question-and-answer sessions or appropriate timing in discussions. Manually typing on smartphones for note-taking could distract users and increase the cognitive load. Some methods leverage large language models (LLM) to automatically generate summaries and highlights, but without user input or interaction, the artificial intelligence (AI) generative content may not match users’ intentions. Therefore, we propose an AI-copiloted augmented reality (AR) system, GazeNoter, to allow users to swiftly select LLM-generated suggestions via gaze on an AR headset for real-time note-taking. GazeNoter combines the diverse suggestion generation of LLM and efficient gaze selection of AR headsets to achieve user-in-the-loop real-time note-taking matching users’ intentions. We conducted a user study to verify the usability of GazeNoter and performed a case study to observe and showcase the real-time note-taking of GazeNoter in the face-to-face discussion." + "\n"
-//         //  + "List of Words That Do Not Overlap With: " + "\n"
-//         //  + currentContextKeywords;
-
-//         // /// <summary>-------  Add previous keywords    ------- </summary> 
-//         // if (keywords)
-//         // {
-
-//         //     request +=
-
-//         //     ", " + previousKeywordsToString + "\n";
-
-//         // }
-
-//         // else
-//         // {
-
-//         //     request += "\n";
-
-//         // }
-
-
-//         // request +=
-
-//         // "Main Keyword: " + keyword + "\n";
-
-//         // /// <summary>-------   keywords ...    ------- </summary>   
-
-//         // request +=
-
-//         // "Based on the above-mentioned Context, which is also showed as follow:  " + context + "\n" +
-//         // "Generate " + requestKeywordNumber + " words that are related to the Main keyword: " + keyword + ", doesn't have to be synonyms. Could be related in any way. " + "\n" +
-//         // //"The generated words must not overlap with the words in the above-mentioned List of Words That Do Not Overlap With nor have the same the lemma of a word, which are also listed as follows: " + "\n" + 
-//         // //"List of Words That Do Not Overlap With: " + currentContextKeywords + previousKeywordsToString + "\n" +
-//         // "The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
-//         // currentContextKeywords + previousKeywordsToString + "\n" + //  previousKeywordsToString + "\n" + 
-//         // "I repeat, The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
-//         // currentContextKeywords + previousKeywordsToString + "\n" + //+ previousKeywordsToString
-//         // "This is very important." + "\n" +
-//         // "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n" +
-//         // "Generate as much as you could as long as it does not overlaps, any related words would do. ";
-
-//         // // "Based on the above-mentioned Context, which is also showed as follow:  " + context + "\n" + 
-//         // // "Generate " + requestKeywordNumber + " words that are related to the Main keyword: "  + keyword +  ", doesn't have to be synonyms. Could be related in any way. " + "\n" +
-//         // // //"The generated words must not overlap with the words in the above-mentioned List of Words That Do Not Overlap With nor have the same the lemma of a word, which are also listed as follows: " + "\n" + 
-//         // // //"List of Words That Do Not Overlap With: " + currentContextKeywords + previousKeywordsToString + "\n" +
-//         // // "The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
-//         // // currentContextKeywords + previousKeywordsToString  + "\n" + //  previousKeywordsToString + "\n" + 
-//         // // "I repeat, The generated words must not overlap with the following words, nor have the same the lemma of a word, which are isted as follows: " + "\n" +
-//         // // currentContextKeywords + previousKeywordsToString  + "\n" + //+ previousKeywordsToString
-//         // // "This is very important." + "\n" + 
-//         // // "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n" + 
-//         // // "Generate as much as you could as long as it does not overlaps, any related words would do. ";
-
-//         // /// <summary>-------   format    ------- </summary>   
-
-//         // request +=
-
-//         // "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. " + "\n";
-
-//         return request;
-
-//     }
-
-//     // public string DerivePureKeywordsPrompt(string keyword, string previousKeywordsToString, string previousContext, int requestKeywordNumber, string currentContextKeywords, bool keywords)
-//     // {
-
-//     //     string request = "";
-
-//     //     /// <summary>-------   Listing information if needed    ------- </summary>        
-
-//     //     request +=
-
-//     //     "Main Keyword: " + keyword + "\n";
-
-
-//     //     request +=
-
-//     //     "List of Words That Do Not Overlap With: " + currentContextKeywords;
-
-//     //     /// <summary>-------  Add previous keywords    ------- </summary> 
-//     //     if (keywords)
-//     //     {
-
-//     //         request +=
-
-//     //         ", " + previousKeywordsToString + "\n";
-
-//     //     }
-
-//     //     else
-//     //     {
-
-//     //         request += "\n";
-
-//     //     }
-
-//     //     /// <summary>-------   context, keywords ...    ------- </summary>   
-
-//     //     request +=
-
-//     //     "Generate " + requestKeywordNumber + " words that are related to the Main Keyword showed in above and also showed as follows: " + "\n" +
-//     //     "Main Keyword: " + keyword + "\n" +
-//     //     "The generated words must not overlap with the words in the above-mentioned List of Words That Do Not Overlap With nor have the same the lemma of a word, which are also listed as follows: " + "\n" +
-//     //     "List of Words That Do Not Overlap With: " + currentContextKeywords + previousKeywordsToString + "\n" +
-//     //     "I repeat, the generated words must not overlap with the words in the above-mentioned List of Words That Do Not Overlap With nor have the same the lemma of a word, especially do not overlap with these words: " + FormRequest.instance.getShowingContextKeywords() + "\n" +
-//     //     "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n";
-
-//     //     // "Generate " + requestKeywordNumber + " words that are related to the context of the Content showed in above and also showed as follows: "  + "\n" + 
-//     //     // "Content: " + previousContext + "\n" + 
-//     //     // "The generated words must not overlap with the words in the above-mentioned List of Words That Do Not Overlap With nor have the same the lemma of a word, which are also listed as follows: " + "\n" + 
-//     //     // "List of Words That Do Not Overlap With: " + currentContextKeywords + previousKeywordsToString + "\n" +
-//     //     // "I repeat, the generated words must not overlap with the words in the above-mentioned List of Words That Do Not Overlap With nor have the same the lemma of a word, especially do not overlap with these words: " + FormRequest.instance.getShowingContextKeywords() + "\n" + 
-//     //     // "For example, if Words Do Not Overlap With contains the word talk, then words like talking, talked and talks are not allowed to be in the generated words since they all share the same lemma of a word. " + "\n";
-
-
-//     //     /// <summary>-------   format    ------- </summary>   
-//     //     request +=
-
-//     //         "Please provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. " + "\n";
-
-//     //     // Debug.Log(request); 
-//     //     return request;
-
-//     // }
-
-//     /// <summary>-------   Step by step version    ------- </summary>    
-//     // public string DeriveKeywordsPrompt(string keyword, string previousKeywordsToString, string previousContext, int requestKeywordNumber, bool context, bool keywords) {
-
-//     //     string request = "";
-
-//     //     /// <summary>-------   Listing information if needed    ------- </summary>        
-//     //     if (context) {
-
-//     //         request += 
-
-//     //         "Previous Content: "  + "\n" + previousContext + "\n"; 
-
-//     //     }  
-
-//     //     if (keywords) {
-
-//     //         request +=
-
-//     //         "Previous Related Words: " + previousKeywordsToString + "\n";  
-
-//     //     }
-
-//     //         request +=
-
-//     //         "Main Keyword: "  + keyword + "\n";
-
-//     //     /// <summary>-------   context, keywords ...    ------- </summary>   
-//     //     if (context && keywords) {
-
-//     //         request +=
-
-//     //         "First, summarize the above-mentioned Previous Content, which is also showed as follows: " + previousContext + "\n"+ 
-
-//     //         "Second, generate " + requestKeywordNumber + " words that are related to the Main keyword (" + keyword + ") and also related to the context of the summarization of Previous Content, the words must not overlap with the above-mentioned Previous Keywords, which are also listed as follows: " + previousKeywordsToString+ "\n";
-
-
-//     //     }
-
-//     //     else if (context) {
-
-//     //         request +=
-
-//     //         "First, summarize the above-mentioned Previous Content, which is also showed as follows: " + previousContext + "\n"+ 
-
-//     //         "Second, generate " + requestKeywordNumber + " words that are related to the Main keyword (" + keyword + ") and also related to the context of the summarization of Previous Content." + "\n";
-
-
-//     //     }
-
-//     //     else if (keywords) {
-
-//     //         request +=
-
-//     //         "Generate " + requestKeywordNumber + " words that are related to the Main keyword (" + keyword + "), the words must not overlap with the above-mentioned Previous Keywords, which are also listed as follows: " + previousKeywordsToString + "\n";
-
-
-//     //     }
-
-//     //     else {
-
-//     //         request +=
-
-//     //         "Generate " + requestKeywordNumber + " words that are related to the Main keyword (" + keyword + "). " + "\n";
-
-//     //     }
-
-//     //     /// <summary>-------   format    ------- </summary>   
-//     //     request +=
-
-//     //         "Please provide me with the related words generated above in a format that words are separated by a newline, not a comma, and without an order number. ";
-
-
-//     //     return request;
-
-//     // }
-
-//     /// <summary>--------------------------------------- </summary> 
-//     /// <summary>-------   Generate sentences    ------- </summary> 
-//     /// <summary>--------------------------------------- </summary>  
-
-//     // private string Introduction = "You are an HCI (human-computer interaction) researcher reviewing an HCI work. Please generate sentences base on your role, but the generated sentences must not contain words similar to HCI";
-//     private string Introduction = "You are an researcher reviewing an work and takin notes, including facts and questions";
-
-//     public string GenerateSentencesPrompt(string context, string selectedKeywordsToString, string questionKeywordsToString, bool questionKeywords, bool questionSentence)
-//     {
-
-//         string request = "";
-//         request += Introduction + "\n";
-
-//         request +=
-//         "Context: " + context + "\n";
-
-
-//         if (questionKeywords)
-//         {
-
-//             request +=
-
-//             "Please generate three question sentences, starting with these question words: " + questionKeywordsToString + "." + "\n" +
-//             "The generated question sentences must all contain the following keywords: " + selectedKeywordsToString + "." + "\n" +
-//             "The generated sentences must be clear and concise, not too long, no more than 10 words. " + "\n" +
-//             "The generated sentences must be questions related to the above-mentioned Context paragraph. ";
-
-//         }
-
-//         else if (questionSentence)
-//         {
-
-//             request +=
-
-//             "Please generate three question sentences, but DO NOT starting with these question words: " + "Who, What, Where, How, When, Why, What" + "." + "\n" +
-//             "I repeat, DO NOT starting the question sentences with these question words, DO NOT : " + "Who, What, Where, How, When, Why, What" + "." + "\n" +
-//             "The generated question sentences must all contain the following keywords or share the same lemma of word: " + selectedKeywordsToString + "." + "\n" +
-//             "The generated sentences must be clear and concise, not too long, no more than 10 words. " + "\n" +
-//             "The generated sentences must be questions related to the above-mentioned Context paragraph. ";
-
-//         }
-
-//         else
-//         {
-
-//             request +=
-
-//             "Please generate three fact sentences, not question sentences. The generated sentences must all contain the following keywords or share the same lemma of word: " + selectedKeywordsToString + "." + "\n" +
-//             "The generated sentences must be clear and concise, not too long, no more than 10 words. " + "\n" +
-//             "The generated sentences could be the brief summary of the above-mentioned Context paragraph, and must contain the following keywords or share the same lemma of word: " + selectedKeywordsToString + "." + "\n" +
-//             "The generated sentences must be related to the above-mentioned Context paragraph. ";
-
-//         }
-
-//         request +=
-//         "Please provide me with the the sentences in a format that sentences are separated by a newline, not a comma, and without an order number. ";
-//         return request;
-
-//     }
-
-//     public string formContextDKRequest(string keyword, string context)
-//     {
-
-//         string request = "";
-
-//         request +=
-
-//         "Based on the above-mentioned Context, which is also showed as follow:  " + "\n" + context + "\n" +
-
-//         "Generate " + 12 + " words that are related to the Main keyword: " + keyword + ", doesn't have to be synonyms. Could be related in any way. " + "\n" +
-
-//         "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. " + "\n";
-
-//         return request;
-
-//     }
-
-//     public string formPureDKRequest(string keyword)
-//     {
-
-//         string request = "";
-
-//         request +=
-
-//         "Generate " + 12 + " words that are related to the Main keyword: " + keyword + ", doesn't have to be synonyms. Could be related in any way. " + "\n" +
-
-//         "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. " + "\n";
-
-//         return request;
-
-//     }
-/// <summary>-------   Derived keywords V2    ------- </summary>    
-// public string PromptWithPreviousKeywordsAndContext(string keyword, string previousKeywordsToString, string previousContext, int requestKeywordNumber, bool context, bool keywords) {
-
-//     string request = "";
-
-//     /// <summary>-------   Listing information if needed    ------- </summary>        
-//     if (context) {
-
-//         request += 
-
-//         "Previous Content: "  + "\n" + previousContext + "\n"; 
-
-//     }  
-
-//     if (keywords) {
-
-//         request +=
-
-//         "Previous Related Words: " + previousKeywordsToString + "\n";  
-
-//     }
-
-//         request +=
-
-//         "Main Keyword: "  + keyword + "\n";
-
-
-//     if (context) {
-
-//         request +=
-
-//         "Goal: Given the above Previous Content and Main Keyword, please generate " + requestKeywordNumber + " words that are related to the Main keyword and also related to the context of Previous Content. " + "\n";
-
-//     }
-
-//     else {
-
-//         request +=
-
-//         "Goal: Given the above Main Keyword, please generate " + requestKeywordNumber + " words that are related to the Main keyword. " + "\n";
-
-//     }
-
-//     if (keywords) {
-
-//         request +=
-
-//         "Please provide new related words that do not overlap with the following words: " + previousKeywordsToString + "\n";  
-
-//     }
-
-//     request +=
-
-//         // "Please generate as much as possible. Doesn't have to be highly related. " + "\n" +      
-
-//         "Please provide me with the related words in a format that words are separated by a newline, not a comma, and without an order number. ";     
-
-//     return request;
-
-// }
