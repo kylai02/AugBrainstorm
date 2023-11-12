@@ -15,6 +15,7 @@ public class GeneratedKeywordsManager : MonoBehaviour {
 
   // --- For testing ---
   private List<string> preKeywords = new List<string>{"Music", "Genre", "Rock"};
+  private List<string> conditions = new List<string>{"Event", "Outdoor"};
   private float execRate = 10.0f;
   private float nextExec = 0.0f;
 
@@ -24,17 +25,18 @@ public class GeneratedKeywordsManager : MonoBehaviour {
 
   void Update() {
     // DEBUG: For testing, execute every 10 seconds
-    // if (Time.time > nextExec) {   
-    //   nextExec = Time.time + execRate;
-    //   updateGeneratedKeywords();
-    // }
+    if (Time.time > nextExec) {   
+      nextExec = Time.time + execRate;
+      updateGeneratedKeywords();
+    }
   }
 
   /// <summary>-------   Generate new keywords and place it   -------</summary>
   private async void updateGeneratedKeywords() {
     List<string> ExtractedGeneratedKeywords = 
       await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
-        preKeywords, 
+        preKeywords,
+        conditions, 
         requestKeywordNumber
       );
 
