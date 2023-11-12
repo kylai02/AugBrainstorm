@@ -40,7 +40,7 @@ public class KeywordButton : MonoBehaviour {
   // Pass selected keyword to UIManager
   private void AddTextToSelectedWord() {
     string keyword = _text.text;
-
+    
     UIManager.instance.AddSelectedWord(keyword);
   }
 }

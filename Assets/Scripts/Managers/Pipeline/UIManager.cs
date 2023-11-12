@@ -16,10 +16,14 @@ public class UIManager : MonoBehaviour {
   public GameObject keywordNodeObj;
   public GameObject tree;
   public GameObject ideasField;
+  public GameObject generatedKeywordsField;
 
   public string initKeyword;
 
   public List<string> selectedKeywords;
+  public List<string> positiveConditions;
+  public List<string> nagativeConditions;
+
   public List<string> contextKeywords;
   public List<string> generatedKeywords;
   public List<string> generatedIdeas;
@@ -30,6 +34,8 @@ public class UIManager : MonoBehaviour {
   
   public KeywordNode selectedNode;
 
+  public bool _isPositive;
+
   void Awake() {
     if (!instance) instance = this;
 
@@ -38,6 +44,8 @@ public class UIManager : MonoBehaviour {
     for (int i = 0; i < 8; ++i) {
       generatedKeywords.Add("");
     }
+
+    _isPositive = true;
   }
 
   // void Start() {
@@ -71,11 +79,16 @@ public class UIManager : MonoBehaviour {
     }
 
     // DEBUG: test node UI
-    if (Input.GetKeyDown(KeyCode.A)) {
-      KeywordNode cur = root;
-      while (cur.children.Count > 0) cur = cur.children[0];
+    // if (Input.GetKeyDown(KeyCode.A)) {
+    //   KeywordNode cur = root;
+    //   while (cur.children.Count > 0) cur = cur.children[0];
 
-      NewKeywordNode("aaaaa", cur);
+    //   NewKeywordNode("aaaaa", cur);
+    // }
+
+    // DEBUG: test condition toggle
+    if (Input.GetKeyDown(KeyCode.P)) {
+      _isPositive = !_isPositive;
     }
 
     UpdateKeywordButtons();
@@ -83,7 +96,14 @@ public class UIManager : MonoBehaviour {
   }
 
   public void AddSelectedWord(string s) {
-    selectedKeywords.Add(s);
+    // selectedKeywords.Add(s);
+
+    if (_isPositive) {
+      positiveConditions.Add(s);
+    }
+    else {
+      nagativeConditions.Add(s);
+    }
   }
 
   public void ChoseSelectedNode(KeywordNode node) {
@@ -101,6 +121,7 @@ public class UIManager : MonoBehaviour {
   }
 
   public void NewKeywordNode(string keyword, KeywordNode parent) {
+    generatedKeywordsField.SetActive(false);
     GameObject newNodeObj = Instantiate(keywordNodeObj);
     newNodeObj.transform.SetParent(tree.transform);
 
@@ -142,6 +163,9 @@ public class UIManager : MonoBehaviour {
       NodePath(),
       8
     );
+    
+    generatedKeywordsField.transform.position = selectedNode.transform.position;
+    generatedKeywordsField.SetActive(true);
   }
 
   private List<string> NodePath() {
