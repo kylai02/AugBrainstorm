@@ -152,11 +152,12 @@ namespace OpenAI
 
     public async Task<List<string>> GetGeneratedKeywordsOpenAI(
       List<string> preKeywords,
+      List<string> conditions,
       int requestKeywordNumber
     )
     {
       string OpenAIResponse =
-        await RequestGeneratedKeywordsOpenAI(preKeywords, requestKeywordNumber);
+        await RequestGeneratedKeywordsOpenAI(preKeywords, conditions, requestKeywordNumber);
 
       // Debug.Log("Response: \n" + OpenAIResponse + "\n");
 
@@ -175,7 +176,7 @@ namespace OpenAI
         Debug.Log("Regenerate Keywords");
         // Retry once
         string secondOpenAIResponse =
-          await RequestGeneratedKeywordsOpenAI(preKeywords, requestKeywordNumber);
+          await RequestGeneratedKeywordsOpenAI(preKeywords, conditions, requestKeywordNumber);
         List<string> secondgeneratedKeywordsList =
           ExtractGeneratedKeywords(secondOpenAIResponse, 120);  // 20
 
@@ -189,6 +190,7 @@ namespace OpenAI
 
     private async Task<string> RequestGeneratedKeywordsOpenAI(
       List<string> preKeywords,
+      List<string> conditions,
       int requestKeywordNumber
     )
     {
@@ -197,7 +199,7 @@ namespace OpenAI
       {
         Role = "user",
         Content =
-          Prompts.instance.GenerateKeywordsPrompt(preKeywords, requestKeywordNumber)
+          Prompts.instance.GenerateKeywordsPrompt(preKeywords, conditions, requestKeywordNumber)
       };
 
       generatedKeywordsMessages.Clear();
