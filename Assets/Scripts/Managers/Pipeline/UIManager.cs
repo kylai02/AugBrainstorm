@@ -161,6 +161,7 @@ public class UIManager : MonoBehaviour {
     ideasField.SetActive(false);
     generatedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
       NodePath(),
+      positiveConditions,
       8
     );
     

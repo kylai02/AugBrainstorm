@@ -147,7 +147,7 @@ public class Prompts : MonoBehaviour
         // forming the conditions string + banned keywords
         for (int i = 0; i < condLen; i++)
         {
-            bannedKeywords += preKeywords[i];
+            // bannedKeywords += preKeywords[i];
             conditionsStr += conditions[i];
 
             if (i != condLen - 1)

@@ -25,10 +25,10 @@ public class GeneratedKeywordsManager : MonoBehaviour {
 
   void Update() {
     // DEBUG: For testing, execute every 10 seconds
-    if (Time.time > nextExec) {   
-      nextExec = Time.time + execRate;
-      updateGeneratedKeywords();
-    }
+    // if (Time.time > nextExec) {   
+    //   nextExec = Time.time + execRate;
+    //   updateGeneratedKeywords();
+    // }
   }
 
   /// <summary>-------   Generate new keywords and place it   -------</summary>
