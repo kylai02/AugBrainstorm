@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEditor.Experimental.GraphView;
+using System;
 
 
 
@@ -13,16 +14,21 @@ public class UIManager : MonoBehaviour {
   public List<TMP_Text> keywordsText;
   public List<TMP_Text> generatedText;
   public List<TMP_Text> ideasText;
+
   public GameObject keywordNodeObj;
   public GameObject tree;
   public GameObject ideasField;
   public GameObject generatedKeywordsField;
+  public GameObject conditionsField;
+  public GameObject conditionBtnObj;
 
   public string initKeyword;
 
   public List<string> selectedKeywords;
   public List<string> positiveConditions;
   public List<string> nagativeConditions;
+
+  public List<GameObject> positiveConditionBtns;
 
   public List<string> contextKeywords;
   public List<string> generatedKeywords;
@@ -61,6 +67,8 @@ public class UIManager : MonoBehaviour {
   void Start() {
     // DEBUG: init node
     NewKeywordNode(initKeyword, root);
+
+    AddCondition("outdoor");
   }
 
   void Update() {
@@ -89,6 +97,10 @@ public class UIManager : MonoBehaviour {
     // DEBUG: test condition toggle
     if (Input.GetKeyDown(KeyCode.P)) {
       _isPositive = !_isPositive;
+    }
+
+    if (Input.GetKeyDown(KeyCode.C)) {
+      AddCondition("game");
     }
 
     UpdateKeywordButtons();
@@ -156,11 +168,46 @@ public class UIManager : MonoBehaviour {
       ideasText[i].text = generatedIdeas[i];
     }
   }
+  
+  public void AddCondition(string condition) {
+    GameObject newCondition = Instantiate(conditionBtnObj);
+    newCondition.transform.SetParent(conditionsField.transform);
+
+    newCondition.GetComponentInChildren<TMP_Text>().text = condition;
+    positiveConditionBtns.Add(newCondition);
+
+    AdjustConditionBtnsPos();
+  }
+
+  public void DeleteCondition(GameObject target) {
+    positiveConditionBtns.Remove(target);
+    Destroy(target);
+
+    AdjustConditionBtnsPos();
+  }
+
+  private void AdjustConditionBtnsPos() {
+    for (int i = 0; i < positiveConditionBtns.Count; ++i) {
+      GameObject btn = positiveConditionBtns[i];
+
+      btn.transform.localPosition = new Vector3(
+        160 * (i % 4),
+        -100 * (i / 4),
+        btn.transform.localPosition.z
+      );
+    }
+  }
 
   private async void UpdateGeneratedKeywords() {
     ideasField.SetActive(false);
+    List<string> positiveCond = new List<string>();
+    foreach (GameObject btn in positiveConditionBtns) {
+      positiveCond.Add(btn.GetComponentInChildren<TMP_Text>().text);
+    }
+
     generatedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
       NodePath(),
+      positiveCond,
       8
     );
     
@@ -190,9 +237,9 @@ public class UIManager : MonoBehaviour {
   }
 
   private void UpdateGeneratedKeywordsButtons() {
-    for (int i = 0; i < 8; ++i) {
+    int len = Math.Min(generatedText.Count, generatedKeywords.Count);
+    for (int i = 0; i < len; ++i) {
       generatedText[i].text = generatedKeywords[i];
     }
   }
-
 }
