@@ -43,8 +43,8 @@ public class GeneratedKeywordsManager : MonoBehaviour {
     if (ExtractedGeneratedKeywords == null || ExtractedGeneratedKeywords.Count == 0)
       return;
 
-    foreach (string s in ExtractedGeneratedKeywords) {
-      Debug.Log(s);
-    }
+    // foreach (string s in ExtractedGeneratedKeywords) {
+    //   Debug.Log(s);
+    // }
   }
 }

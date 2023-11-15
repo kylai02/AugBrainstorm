@@ -27,6 +27,8 @@ public class UIManager : MonoBehaviour {
   
   public KeywordNode selectedNode;
 
+  private List<string> conditions = new List<string> {"Event", "Music"}; // For testing
+
   void Awake() {
     if (!instance) instance = this;
 
@@ -114,6 +116,7 @@ public class UIManager : MonoBehaviour {
   private async void UpdateGeneratedKeywords() {
     generatedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
       NodePath(),
+      conditions, // For testing
       3
     );
   }
