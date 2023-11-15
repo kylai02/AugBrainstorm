@@ -25,10 +25,10 @@ public class GeneratedIdeasManager : MonoBehaviour {
 
   void Update() {
     // DEBUG: For testing, execute every 10 seconds
-    if (Time.time > nextExec) {   
-      nextExec = Time.time + execRate;
-      updateGeneratedIdeas();
-    }
+    // if (Time.time > nextExec) {   
+    //   nextExec = Time.time + execRate;
+    //   updateGeneratedIdeas();
+    // }
   }
 
   /// <summary>-------   Generate new keywords and place it   -------</summary>
