@@ -76,7 +76,7 @@ public class Prompts : MonoBehaviour
             }
         }
 
-        Debug.Log("Request: \n" + request + "\n");
+        // Debug.Log("Request: \n" + request + "\n");
 
         return request;
 
@@ -147,7 +147,7 @@ public class Prompts : MonoBehaviour
         // forming the conditions string + banned keywords
         for (int i = 0; i < condLen; i++)
         {
-            bannedKeywords += preKeywords[i];
+            // bannedKeywords += preKeywords[i];
             conditionsStr += conditions[i];
 
             if (i != condLen - 1)
@@ -182,35 +182,45 @@ public class Prompts : MonoBehaviour
         "\n" +
         "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons.";
 
-        // request +=
+        // Debug.Log("Request: \n" + request + "\n");
 
-        // "I would like to conduct an English keyword brainstorming. Please use the provided " + keywordNumber + " thought path tree to generate 1 keywords related to each path." + "\n" +
-        // "The further along the path tree a node is, the stronger the relevance should be to the generated keywords. The relevance of each node with the new keyword must be " + times + " times that of the parent node." + "\n" +
-        // "The term 'keywords' can also include names of people, places, proper nouns, and so on, without any specific restrictions. The new keywords generated doesn't have to be synonyms. Could be related in any way." + "\n" +
-        // "Within a node, there may be multiple words separated by commas. The words within the same node need to have the same level of relevance to the generated new keywords." + "\n" +
-        // "The direction of nodes in the path trees is represented by ->, with the first word in each path being the root node and the last word being the current leaf node." + "\n" +
-        // "Please do not alter or extend the paths but generate 1 possible new leaf nodes from the existing leaf nodes of each path trees." + "\n" +
-        // "If there is only one word in the path, it means that only that word is under consideration. Please generate new keywords based on that word as well." + "\n" +
-        // "If there are cases where multiple thought paths are the same, it is acceptable. Please also help me generate a new keyword for each thought path, while strictly adhering to the rule that all keywords must be distinct from each other." + "\n" +
-        // "Notice that the newly generated keywords must not be the same as any banned keywords i provided below, seperated by ->. These " + keywordNumber + " keywords should also be entirely distinct from each other." + "\n" +
-        // "Banned keywords: " + path100 + "\n" +
-        // "I repeat, the newly generated keywords must not be the same as any banned keywords i provided below, seperated by ->. These " + keywordNumber + " keywords should also be entirely distinct from each other. This is the most important limit, please strictly adhere to it" + "\n" +
-        // "Banned keywords: " + path100 + "\n" +
-        // "The thought path trees of each keyword are listed below:" + "\n" +
-        // "1: " + path20 + "\n" +
-        // "2: " + path40 + "\n" +
-        // "3: " + path60 + "\n" +
-        // "4: " + path80 + "\n" +
-        // "5: " + path80 + "\n" +
-        // "6: " + path100 + "\n" +
-        // "7: " + path100 + "\n" +
-        // "8: " + path100 + "\n" +
-        // "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons." + "\n" +
-        // "Please strictly adhere to the output format; any output outside of the specified format is not allowed.";
+        return request;
+
+    }
+
+    /// <summary>---------------------------------------------------- </summary> 
+    /// <summary>----------   Prompt to merge conditions   ---------- </summary> 
+    /// <summary>---------------------------------------------------- </summary>     
+
+    public string MergeConditionsPrompt(   // Merge multiple conditions into one word
+        List<string> conditions  // Conditions from user
+    )
+    {
+        string conditionsStr = ""; // string of the conditions
+        string request = "";    // prompt for ChatGPT
+
+        int len = conditions.Count;    // the length of preKeywords
+
+        // forming conditions string
+        for (int i = 0; i < len; i++)
+        {
+            conditionsStr += conditions[i];
+
+            if (i != len - 1)
+            {
+                conditionsStr += ", ";
+            }
+        }
+
+        request +=
+
+        "Keyword list: " + conditionsStr + "\n" +
+        "\n" +
+        "I would like to conduct an English keyword brainstorming. Please use the provided keyword list to generate 1 word, which is related to all keywords in the keyword list." + "\n" +
+        "Please provide only the keywords brainstormed based on the above conditions. Do not include any additional phrases, and avoid any introductions.";
 
         Debug.Log("Request: \n" + request + "\n");
 
         return request;
-
     }
 }

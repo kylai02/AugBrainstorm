@@ -25,10 +25,10 @@ public class GeneratedKeywordsManager : MonoBehaviour {
 
   void Update() {
     // DEBUG: For testing, execute every 10 seconds
-    if (Time.time > nextExec) {   
-      nextExec = Time.time + execRate;
-      updateGeneratedKeywords();
-    }
+    // if (Time.time > nextExec) {   
+    //   nextExec = Time.time + execRate;
+    //   updateGeneratedKeywords();
+    // }
   }
 
   /// <summary>-------   Generate new keywords and place it   -------</summary>
@@ -43,8 +43,8 @@ public class GeneratedKeywordsManager : MonoBehaviour {
     if (ExtractedGeneratedKeywords == null || ExtractedGeneratedKeywords.Count == 0)
       return;
 
-    foreach (string s in ExtractedGeneratedKeywords) {
-      Debug.Log(s);
-    }
+    // foreach (string s in ExtractedGeneratedKeywords) {
+    //   Debug.Log(s);
+    // }
   }
 }
