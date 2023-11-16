@@ -69,7 +69,10 @@ public class UIManager : MonoBehaviour {
     // DEBUG: init node
     NewKeywordNode(initKeyword, root);
 
+
+    // DEBUG: init conditions
     AddCondition("outdoor");
+    AddCondition("game");
   }
 
   void Update() {
