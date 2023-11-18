@@ -15,6 +15,7 @@ public class GeneratedKeywordsManager : MonoBehaviour {
 
   // --- For testing ---
   private List<string> preKeywords = new List<string>{"Music", "Genre", "Rock"};
+  private List<string> conditions = new List<string>{"Event", "Outdoor"};
   private float execRate = 10.0f;
   private float nextExec = 0.0f;
 
@@ -34,15 +35,16 @@ public class GeneratedKeywordsManager : MonoBehaviour {
   private async void updateGeneratedKeywords() {
     List<string> ExtractedGeneratedKeywords = 
       await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
-        preKeywords, 
+        preKeywords,
+        conditions, 
         requestKeywordNumber
       );
 
     if (ExtractedGeneratedKeywords == null || ExtractedGeneratedKeywords.Count == 0)
       return;
 
-    foreach (string s in ExtractedGeneratedKeywords) {
-      Debug.Log(s);
-    }
+    // foreach (string s in ExtractedGeneratedKeywords) {
+    //   Debug.Log(s);
+    // }
   }
 }
