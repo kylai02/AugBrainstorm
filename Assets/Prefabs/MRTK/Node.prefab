@@ -212,7 +212,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 680505b4b4f3400f9fd3ebb242751819, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -422,6 +422,8 @@ MonoBehaviour:
   keyword: 
   parent: {fileID: 0}
   children: []
+  unselectedMat: {fileID: 2100000, guid: 680505b4b4f3400f9fd3ebb242751819, type: 2}
+  selectedMat: {fileID: 2100000, guid: a50237e3265fe9149a16e889fd8d8b4c, type: 2}
 --- !u!1 &4761296635217492167
 GameObject:
   m_ObjectHideFlags: 0

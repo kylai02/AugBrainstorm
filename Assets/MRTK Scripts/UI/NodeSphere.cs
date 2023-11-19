@@ -7,6 +7,9 @@ public class NodeSphere : MonoBehaviour {
   public NodeSphere parent;
   public List<NodeSphere> children;
 
+  public Material unselectedMat;
+  public Material selectedMat;
+
   public static NodeSphere SelectedNode;
 
   void Awake() {
@@ -21,6 +24,14 @@ public class NodeSphere : MonoBehaviour {
   }
 
   public void SelectNode() {
+    if (SelectedNode != this && SelectedNode != null) {
+      SelectedNode.gameObject.GetComponent<MeshRenderer>().material = unselectedMat;
+      gameObject.GetComponent<MeshRenderer>().material = selectedMat;
+    }
+    else if (SelectedNode == null) {
+      gameObject.GetComponent<MeshRenderer>().material = selectedMat;
+    }
+
     // Update selectedNode
     SelectedNode = this;
     MainManager.instance.ChoseSelectedNode();
