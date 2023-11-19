@@ -1,18 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-
-public class KeywordNode : MonoBehaviour {
+public class NodeSphere : MonoBehaviour {
   public string keyword;
-  public KeywordNode parent;
-  public List<KeywordNode> children;
+  public NodeSphere parent;
+  public List<NodeSphere> children;
+
+  public static NodeSphere SelectedNode;
 
   void Awake() {
-    children = new List<KeywordNode>();
+    children = new List<NodeSphere>();
   }
 
   void Start() {
@@ -22,8 +20,10 @@ public class KeywordNode : MonoBehaviour {
     // }
   }
 
-  public void AddNodeToSelectedNode() {
-    // UIManager.instance.ChoseSelectedNode(this);
+  public void SelectNode() {
+    // Update selectedNode
+    SelectedNode = this;
+    MainManager.instance.ChoseSelectedNode();
 
     Debug.Log("onClick");
   }
