@@ -12,15 +12,26 @@ public class NodeSphere : MonoBehaviour {
 
   public static NodeSphere SelectedNode;
 
+  private LineRenderer _lineRenderer;
+
   void Awake() {
     children = new List<NodeSphere>();
   }
 
   void Start() {
+    _lineRenderer = GetComponent<LineRenderer>();
+    _lineRenderer.positionCount = 2;
     // Button btn = GetComponent<Button>() ?? null;
     // if (btn) {
     //   btn.onClick.AddListener(AddNodeToSelectedNode);
     // }
+  }
+
+  void Update() {
+    if (parent.keyword != "root") {
+      _lineRenderer.SetPosition(0, transform.position);
+      _lineRenderer.SetPosition(1, parent.transform.position);
+    }
   }
 
   public void SelectNode() {
