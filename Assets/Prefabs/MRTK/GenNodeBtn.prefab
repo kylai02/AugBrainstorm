@@ -324,7 +324,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: '
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: afc8299d5d5bbd440a0616c8ecbc7217, type: 2}
   m_sharedMaterial: {fileID: 21340371490990018, guid: afc8299d5d5bbd440a0616c8ecbc7217, type: 2}
@@ -351,8 +353,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 10
+  m_fontSizeBase: 10
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -497,6 +499,7 @@ GameObject:
   - component: {fileID: 6182426419485499970}
   - component: {fileID: 1806661076056452153}
   - component: {fileID: 3509345611641338558}
+  - component: {fileID: 7593522934545429389}
   m_Layer: 0
   m_Name: GenNodeBtn
   m_TagString: Untagged
@@ -894,6 +897,18 @@ MonoBehaviour:
       - Far Only
   resetOnDestroy: 0
   enabledOnStart: 1
+--- !u!114 &7593522934545429389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7195837223590000950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9b34b0ac54fdb649a2ad90f25c24b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8696911549096774976
 GameObject:
   m_ObjectHideFlags: 0

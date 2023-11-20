@@ -1,24 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using System;
+
+using TMPro;
+
 
 public class MainManager : MonoBehaviour {
   [SpaceAttribute(10)]
   [HeaderAttribute("-------   Reference    ------- ")]
   [SpaceAttribute(10)]
   // public List<TMP_Text> keywordsText;
-  // public List<TMP_Text> generatedText;
+  public List<TMP_Text> generatedKeywordsText;
   // public List<TMP_Text> ideasText;
 
-  // public GameObject keywordNodeObj;
-  // public GameObject tree;
   // public GameObject ideasField;
   public GameObject genBtnField;
+  public GameObject tree;
   // public GameObject conditionsField;
   // public GameObject conditionBtnObj;
 
-  // public string initKeyword;
+  // MainManager always holds the root of the Tree;
+  public NodeSphere root;
 
+  [HeaderAttribute("-------   Prefab    ------- ")]
+  public GameObject nodePrefab;
+
+  [HeaderAttribute("-------   Debug    ------- ")]
+  public string initKeyword;
+  public NodeSphere selectedNode;
+
+  [HeaderAttribute("-------   temp public    ------- ")]
+  public List<string> generatedKeywords;
   // public List<string> selectedKeywords;
   // public List<string> positiveConditions;
   // public List<string> nagativeConditions;
@@ -26,12 +40,8 @@ public class MainManager : MonoBehaviour {
   // public List<GameObject> positiveConditionBtns;
 
   // public List<string> contextKeywords;
-  // public List<string> generatedKeywords;
   // public List<string> generatedIdeas;
 
-  // MainManager always holds the root of the Tree;
-  public NodeSphere root;
-  public NodeSphere selectedNode;
 
   public static MainManager instance;
   
@@ -62,17 +72,17 @@ public class MainManager : MonoBehaviour {
   //   a.children.Add(c);
   // }
 
-  // void Start() {
-  //   // DEBUG: init node
-  //   NewKeywordNode(initKeyword, root);
+  void Start() {
+    // DEBUG: init node
+    AddNode(initKeyword, root);
 
 
   //   // DEBUG: init conditions
   //   AddCondition("outdoor");
   //   AddCondition("game");
-  // }
+  }
 
-  // void Update() {
+  void Update() {
 
   //   // DEBUG: test contextKeywords
   //   if (Input.GetKeyDown(KeyCode.Space)) {
@@ -105,13 +115,19 @@ public class MainManager : MonoBehaviour {
   //   }
 
   //   UpdateKeywordButtons();
-  //   UpdateGeneratedKeywordsButtons();
-  // }
+    UpdateGenKeywordsText();
+  }
 
-  public void ChoseSelectedNode() {
+  public async void ChoseSelectedNode() {
     selectedNode = NodeSphere.SelectedNode;
 
     // UpdateGeneratedKeywords();
+    genBtnField.SetActive(false);
+    generatedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
+      preKeywords: NodePath(),
+      conditions: new List<string>(),
+      requestKeywordNumber: 8
+    );
     genBtnField.transform.position = selectedNode.transform.position;
     genBtnField.SetActive(true);
   }
@@ -123,11 +139,11 @@ public class MainManager : MonoBehaviour {
     //   positiveCond.Add(btn.GetComponentInChildren<TMP_Text>().text);
     // }
 
-    // generatedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
-    //   NodePath(),
-    //   positiveCond,
-    //   8
-    // );
+  //   generatedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
+  //     NodePath(),
+  //     positiveCond,
+  //     8
+  //   );
     
   // }
 
@@ -143,29 +159,31 @@ public class MainManager : MonoBehaviour {
   // }
 
 
-  // public void NewKeywordNode(string keyword, KeywordNode parent) {
-  //   generatedKeywordsField.SetActive(false);
-  //   GameObject newNodeObj = Instantiate(keywordNodeObj);
-  //   newNodeObj.transform.SetParent(tree.transform);
+  public void AddNode(string keyword, NodeSphere parent) {
+    genBtnField.SetActive(false);
+    GameObject newNodeObj = Instantiate(nodePrefab);
+    newNodeObj.transform.SetParent(tree.transform); // Set new node obj under
 
-  //   KeywordNode newNode = newNodeObj.GetComponent<KeywordNode>();
+    NodeSphere newNode = newNodeObj.GetComponent<NodeSphere>();
 
-  //   newNode.keyword = keyword;
-  //   newNode.parent = parent;
-  //   parent.children.Add(newNode);
-  //   newNodeObj.GetComponentInChildren<TMP_Text>().text = keyword;
+    // Set new node attribute
+    newNode.keyword = keyword;
+    newNode.parent = parent;
+    parent.children.Add(newNode);
+    newNodeObj.GetComponentInChildren<TMP_Text>().text = keyword;
 
-  //   if (parent != root) {
-  //     newNodeObj.transform.localPosition = new Vector3(
-  //       parent.transform.localPosition.x + 200,
-  //       parent.transform.localPosition.y,
-  //       parent.transform.localPosition.z
-  //     );
-  //   }
-  //   else {
-  //     newNodeObj.transform.localPosition = new Vector3(-600, -150, 0);
-  //   }
-  // }
+    // Set new node position
+    if (parent != root) {
+      newNodeObj.transform.localPosition = new Vector3(
+        parent.transform.localPosition.x + 0.26f,
+        parent.transform.localPosition.y,
+        parent.transform.localPosition.z
+      );
+    }
+    else {
+      newNodeObj.transform.localPosition = new Vector3(0, -0.1f, 0.5f);
+    }
+  }
 
   // public async void GenerateIdea() {
   //   generatedIdeas = await OpenAI.OpenAI.instance.GetGeneratedIdeasOpenAI(
@@ -210,17 +228,17 @@ public class MainManager : MonoBehaviour {
   // }
 
 
-  // private List<string> NodePath() {
-  //   List<string> arr = new List<string>();
+  private List<string> NodePath() {
+    List<string> arr = new List<string>();
     
-  //   KeywordNode cur = selectedNode;
-  //   while (cur != root) {
-  //     arr.Add(cur.keyword);
-  //     cur = cur.parent;
-  //   }
-  //   arr.Reverse();
-  //   return arr;
-  // }
+    NodeSphere cur = NodeSphere.SelectedNode;
+    while (cur != root) {
+      arr.Add(cur.keyword);
+      cur = cur.parent;
+    }
+    arr.Reverse();
+    return arr;
+  }
 
   // private void UpdateKeywordButtons() {
   //   for (int i = 0; i < 8; ++i) {
@@ -231,10 +249,16 @@ public class MainManager : MonoBehaviour {
   //   }
   // }
 
-  // private void UpdateGeneratedKeywordsButtons() {
-  //   int len = Math.Min(generatedText.Count, generatedKeywords.Count);
-  //   for (int i = 0; i < len; ++i) {
-  //     generatedText[i].text = generatedKeywords[i];
-  //   }
-  // }
+  private void UpdateGenKeywordsText() {
+    int len = Math.Min(generatedKeywordsText.Count, generatedKeywords.Count);
+    for (int i = 0; i < len; ++i) {
+      generatedKeywordsText[i].text = generatedKeywords[i];
+    }
+
+    if (len < 8) {
+      for (int i = len; i < 8; ++i) {
+        generatedKeywordsText[i].text = "";
+      }
+    }
+  }
 }
