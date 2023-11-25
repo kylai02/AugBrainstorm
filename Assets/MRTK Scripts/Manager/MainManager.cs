@@ -42,7 +42,7 @@ public class MainManager : MonoBehaviour {
   // public List<string> contextKeywords;
   // public List<string> generatedIdeas;
 
-
+  // Singleton
   public static MainManager instance;
   
 

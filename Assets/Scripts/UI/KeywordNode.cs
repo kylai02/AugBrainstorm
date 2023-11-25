@@ -16,15 +16,15 @@ public class KeywordNode : MonoBehaviour {
   }
 
   void Start() {
-    // Button btn = GetComponent<Button>() ?? null;
-    // if (btn) {
-    //   btn.onClick.AddListener(AddNodeToSelectedNode);
-    // }
+    Button btn = GetComponent<Button>() ?? null;
+    if (btn) {
+      btn.onClick.AddListener(AddNodeToSelectedNode);
+    }
   }
 
   public void AddNodeToSelectedNode() {
-    // UIManager.instance.ChoseSelectedNode(this);
+    UIManager.instance.ChoseSelectedNode(this);
 
-    Debug.Log("onClick");
+    // Debug.Log("onClick");
   }
 }
