@@ -36,6 +36,7 @@ public class MainManager : MonoBehaviour {
   // public List<string> selectedKeywords;
   // public List<string> positiveConditions;
   // public List<string> nagativeConditions;
+  public List<string> genKeywordsConditions;
 
   // public List<GameObject> positiveConditionBtns;
 
@@ -121,11 +122,10 @@ public class MainManager : MonoBehaviour {
   public async void ChoseSelectedNode() {
     selectedNode = NodeSphere.SelectedNode;
 
-    // UpdateGeneratedKeywords();
     genBtnField.SetActive(false);
     generatedKeywords = await OpenAI.OpenAI.instance.GetGeneratedKeywordsOpenAI(
       preKeywords: NodePath(),
-      conditions: new List<string>(),
+      conditions: genKeywordsConditions,
       requestKeywordNumber: 8
     );
     genBtnField.transform.position = selectedNode.transform.position;
@@ -198,34 +198,13 @@ public class MainManager : MonoBehaviour {
   //   }
   // }
   
-  // public void AddCondition(string condition) {
-  //   GameObject newCondition = Instantiate(conditionBtnObj);
-  //   newCondition.transform.SetParent(conditionsField.transform);
+  public void AddCondition(string condition) {
+    genKeywordsConditions.Add(condition);
+  }
 
-  //   newCondition.GetComponentInChildren<TMP_Text>().text = condition;
-  //   positiveConditionBtns.Add(newCondition);
-
-  //   AdjustConditionBtnsPos();
-  // }
-
-  // public void DeleteCondition(GameObject target) {
-  //   positiveConditionBtns.Remove(target);
-  //   Destroy(target);
-
-  //   AdjustConditionBtnsPos();
-  // }
-
-  // private void AdjustConditionBtnsPos() {
-  //   for (int i = 0; i < positiveConditionBtns.Count; ++i) {
-  //     GameObject btn = positiveConditionBtns[i];
-
-  //     btn.transform.localPosition = new Vector3(
-  //       160 * (i % 4),
-  //       -100 * (i / 4),
-  //       btn.transform.localPosition.z
-  //     );
-  //   }
-  // }
+  public void DeleteCondition(string target) {
+    genKeywordsConditions.Remove(target);
+  }
 
 
   private List<string> NodePath() {

@@ -197,7 +197,7 @@ public class UIManager : MonoBehaviour {
       btn.transform.localPosition = new Vector3(
         160 * (i % 4),
         -100 * (i / 4),
-        btn.transform.localPosition.z
+        0
       );
     }
   }
