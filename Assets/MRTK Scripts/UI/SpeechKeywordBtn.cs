@@ -15,7 +15,7 @@ public class SpeechKeywordBtn : MonoBehaviour {
     _text = GetComponentInChildren<TMP_Text>();
   }
 
-  // Add select keyword to MainManager and SKM
+  // Add select keyword to SKM
   private void AddTextToSelectedWord() {
     if (_text.text == "") return;
     
