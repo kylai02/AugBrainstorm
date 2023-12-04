@@ -139,15 +139,16 @@ public class Prompts : MonoBehaviour
 
             if (i != len - 1)
             {
-                bannedKeywords += ", ";
                 path100 += " -> ";
             }
+
+            bannedKeywords += ", ";
         }
 
         // forming the conditions string + banned keywords
         for (int i = 0; i < condLen; i++)
         {
-            // bannedKeywords += preKeywords[i];
+            bannedKeywords += conditions[i];
             conditionsStr += conditions[i];
 
             if (i != condLen - 1)
@@ -161,14 +162,22 @@ public class Prompts : MonoBehaviour
 
         "Banned keywords: " + bannedKeywords + "\n" +
         "Thought path trees:" + "\n" +
-        "1: " + path20 + " (Conditions: " + conditionsStr + ")" + "\n" +
-        "2: " + path40 + " (Conditions: " + conditionsStr + ")" + "\n" +
-        "3: " + path60 + " (Conditions: " + conditionsStr + ")" + "\n" +
-        "4: " + path80 + " (Conditions: " + conditionsStr + ")" + "\n" +
-        "5: " + path80 + " (Conditions: " + conditionsStr + ")" + "\n" +
-        "6: " + path100 + " (Conditions: " + conditionsStr + ")" + "\n" +
-        "7: " + path100 + " (Conditions: " + conditionsStr + ")" + "\n" +
-        "8: " + path100 + " (Conditions: " + conditionsStr + ")" + "\n" +
+        "1: " + path20 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "2: " + path20 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "3: " + path40 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "4: " + path40 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "5: " + path60 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "6: " + path60 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "7: " + path60 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "8: " + path80 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "9: " + path80 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "10: " + path80 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "11: " + path100 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "12: " + path100 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "13: " + path100 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "14: " + path100 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "15: " + path100 + " (Conditions: "+ conditionsStr + ")" + "\n" +
+        "16: " + path100 + " (Conditions: "+ conditionsStr + ")" + "\n" +
         "\n" +
         "I would like to conduct an English keyword brainstorming. Please use the provided " + requestKeywordNumber + " thought path tree to generate 1 keywords each, which is related to the cooresponding thought path tree. Those " + requestKeywordNumber + " generated words should be distinct and must not be the same as any provided Banned keywords. Notice that the " + requestKeywordNumber + " generated keywords should be under the conditions, provided after each thought path tree." + "\n" +
         "\n" +
@@ -181,6 +190,31 @@ public class Prompts : MonoBehaviour
         "Please note that for each thought path tree and condition, generate only one new word. Do not generate two words separated by a comma." + "\n" +
         "\n" +
         "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons.";
+
+        // request +=
+
+        // "Banned keywords: " + bannedKeywords + "\n" +
+        // "Thought path trees:" + "\n" +
+        // "1: " + path20 + " (Conditions: " + conditionsStr + ")" + "\n" +
+        // "2: " + path40 + " (Conditions: " + conditionsStr + ")" + "\n" +
+        // "3: " + path60 + " (Conditions: " + conditionsStr + ")" + "\n" +
+        // "4: " + path80 + " (Conditions: " + conditionsStr + ")" + "\n" +
+        // "5: " + path80 + " (Conditions: " + conditionsStr + ")" + "\n" +
+        // "6: " + path100 + " (Conditions: " + conditionsStr + ")" + "\n" +
+        // "7: " + path100 + " (Conditions: " + conditionsStr + ")" + "\n" +
+        // "8: " + path100 + " (Conditions: " + conditionsStr + ")" + "\n" +
+        // "\n" +
+        // "I would like to conduct an English keyword brainstorming. Please use the provided " + requestKeywordNumber + " thought path tree to generate 1 keywords each, which is related to the cooresponding thought path tree. Those " + requestKeywordNumber + " generated words should be distinct and must not be the same as any provided Banned keywords. Notice that the " + requestKeywordNumber + " generated keywords should be under the conditions, provided after each thought path tree." + "\n" +
+        // "\n" +
+        // "The further along the thought path tree a node is, the stronger the relevance should be to the generated keywords. The relevance of each node with the new keyword must be " + times + " times that of the parent node." + "\n" +
+        // "\n" +
+        // "Within a node in the thought path tree, there may be multiple words separated by commas. The words within the same node need to have the same level of relevance to the generated new keywords." + "\n" +
+        // "\n" +
+        // "If there is only one word in the path, it means that only that word is under consideration. Please generate new keywords based on that word as well." + "\n" +
+        // "\n" +
+        // "Please note that for each thought path tree and condition, generate only one new word. Do not generate two words separated by a comma." + "\n" +
+        // "\n" +
+        // "Provide me with the words generated above in a format that words are separated by a newline, not a comma, and without an order number. Do not include any additional sentences in your response. No need to provide the original path; just the words are sufficient. No need to reply with 'Understood' or provide reasons.";
 
         Debug.Log("Request: \n" + request + "\n");
 

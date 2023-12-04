@@ -160,7 +160,7 @@ namespace OpenAI
       string OpenAIResponse =
         await RequestGeneratedKeywordsOpenAI(preKeywords, conditions, requestKeywordNumber);
 
-      // Debug.Log("Response: \n" + OpenAIResponse + "\n");
+      Debug.Log("Response: \n" + OpenAIResponse + "\n");
 
       List<string> generatedKeywordsList =
         ExtractGeneratedKeywords(OpenAIResponse, 20);
