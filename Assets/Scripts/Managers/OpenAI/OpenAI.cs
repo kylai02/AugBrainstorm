@@ -166,29 +166,29 @@ namespace OpenAI
       List<string> generatedKeywordsList =
         ExtractGeneratedKeywords(OpenAIResponse, 20);
 
-      Debug.Log("generatedKeywordsList: \n");
+      // Test
+      string generatedKeywordsTest = "";
+      generatedKeywordsTest += "generatedKeywordsList: \n";
       for (int i = 0 ; i < generatedKeywordsList.Count ; i++)
       {
         int n = i + 1;
-        Debug.Log(n + ". " + generatedKeywordsList[i] + "\n");
+        generatedKeywordsTest += n + ". " + generatedKeywordsList[i] + "\n";
       }
-      // foreach (string str in generatedKeywordsList)
-      // {
-      //   Debug.Log(str + "\n");
-      // }
+      Debug.Log(generatedKeywordsTest);
+      // Test end
 
       List<string> filteredKeywordsList = FilterGeneratedKeywords(generatedKeywordsList, preKeywords, conditions, requestKeywordNumber);
 
-      Debug.Log("filteredKeywordsList: \n");
+      // Test
+      string filteredKeywordsTest = "";
+      filteredKeywordsTest += "filteredKeywordsList: \n";
       for (int i = 0 ; i < filteredKeywordsList.Count ; i++)
       {
         int n = i + 1;
-        Debug.Log(n + ". " + filteredKeywordsList[i] + "\n");
+        filteredKeywordsTest += n + ". " + filteredKeywordsList[i] + "\n";
       }
-      // foreach (string str in filteredKeywordsList)
-      // {
-      //   Debug.Log(str + "\n");
-      // }
+      Debug.Log(filteredKeywordsTest);
+      // Test end
 
       // Still wrong format or nothing is generated
       if (filteredKeywordsList == null || filteredKeywordsList.Count < requestKeywordNumber)
