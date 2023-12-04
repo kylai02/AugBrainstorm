@@ -94,7 +94,7 @@ public class Prompts : MonoBehaviour
     {
         int times = 10;    // The importance multiplier between the current node and the previous node
 
-        // int keywordNumber = 8;  // For test
+        int testKeywordNumber = 16;  // For test
 
         string bannedKeywords = ""; // Keywords to ban (preKeywords + conditions)
         string path20 = "";   // 20% of thought path (1st keyword)
@@ -179,7 +179,7 @@ public class Prompts : MonoBehaviour
         "15: " + path100 + " (Conditions: "+ conditionsStr + ")" + "\n" +
         "16: " + path100 + " (Conditions: "+ conditionsStr + ")" + "\n" +
         "\n" +
-        "I would like to conduct an English keyword brainstorming. Please use the provided " + requestKeywordNumber + " thought path tree to generate 1 keywords each, which is related to the cooresponding thought path tree. Those " + requestKeywordNumber + " generated words should be distinct and must not be the same as any provided Banned keywords. Notice that the " + requestKeywordNumber + " generated keywords should be under the conditions, provided after each thought path tree." + "\n" +
+        "I would like to conduct an English keyword brainstorming. Please use the provided " + testKeywordNumber + " thought path tree to generate 1 keywords each, which is related to the cooresponding thought path tree. Those " + testKeywordNumber + " generated words should be distinct and must not be the same as any provided Banned keywords. Notice that the " + testKeywordNumber + " generated keywords should be under the conditions, provided after each thought path tree." + "\n" +
         "\n" +
         "The further along the thought path tree a node is, the stronger the relevance should be to the generated keywords. The relevance of each node with the new keyword must be " + times + " times that of the parent node." + "\n" +
         "\n" +

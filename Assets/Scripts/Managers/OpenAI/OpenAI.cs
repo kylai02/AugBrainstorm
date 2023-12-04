@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 
 namespace OpenAI
 {
@@ -130,14 +131,14 @@ namespace OpenAI
       //   }
       // }
 
-      for (int i = 0 ; i < words.Length ; ++i)
+      for (int i = 0; i < words.Length; ++i)
       {
         int colonIndex = words[i].IndexOf(colon);
         if (colonIndex >= 0)
         {
           words[i] = words[i].Substring(colonIndex + 1);
         }
-        
+
         if (!string.IsNullOrEmpty(words[i]))
         {
           ExtractedList.Add(words[i]);
@@ -165,14 +166,32 @@ namespace OpenAI
       List<string> generatedKeywordsList =
         ExtractGeneratedKeywords(OpenAIResponse, 20);
 
-      // Debug.Log("KeywordsList: \n");
+      Debug.Log("generatedKeywordsList: \n");
+      for (int i = 0 ; i < generatedKeywordsList.Count ; i++)
+      {
+        int n = i + 1;
+        Debug.Log(n + ". " + generatedKeywordsList[i] + "\n");
+      }
       // foreach (string str in generatedKeywordsList)
       // {
       //   Debug.Log(str + "\n");
       // }
 
+      List<string> filteredKeywordsList = FilterGeneratedKeywords(generatedKeywordsList, preKeywords, conditions, requestKeywordNumber);
+
+      Debug.Log("filteredKeywordsList: \n");
+      for (int i = 0 ; i < filteredKeywordsList.Count ; i++)
+      {
+        int n = i + 1;
+        Debug.Log(n + ". " + filteredKeywordsList[i] + "\n");
+      }
+      // foreach (string str in filteredKeywordsList)
+      // {
+      //   Debug.Log(str + "\n");
+      // }
+
       // Still wrong format or nothing is generated
-      if (generatedKeywordsList == null || generatedKeywordsList.Count < requestKeywordNumber)
+      if (filteredKeywordsList == null || filteredKeywordsList.Count < requestKeywordNumber)
       {
         Debug.Log("Regenerate Keywords");
         // Retry once
@@ -180,12 +199,13 @@ namespace OpenAI
           await RequestGeneratedKeywordsOpenAI(preKeywords, conditions, requestKeywordNumber);
         List<string> secondgeneratedKeywordsList =
           ExtractGeneratedKeywords(secondOpenAIResponse, 120);  // 20
+        List<string> secondfilteredKeywordsList = FilterGeneratedKeywords(secondgeneratedKeywordsList, preKeywords, conditions, requestKeywordNumber);
 
-        return secondgeneratedKeywordsList;
+        return secondfilteredKeywordsList;
       }
       else
       {
-        return generatedKeywordsList;
+        return filteredKeywordsList;
       }
     }
 
@@ -245,14 +265,14 @@ namespace OpenAI
       /// <summary>-------   Try parse with new line    ------- </summary>  
       string[] words = responseContent.Split('\n');
 
-      for (int i = 0 ; i < words.Length ; ++i)
+      for (int i = 0; i < words.Length; ++i)
       {
         int colonIndex = words[i].IndexOf(colon);
         if (colonIndex >= 0)
         {
           words[i] = words[i].Substring(colonIndex + 1);
         }
-        
+
         if (!string.IsNullOrEmpty(words[i]))
         {
           ExtractedList.Add(words[i]);
@@ -260,6 +280,56 @@ namespace OpenAI
       }
 
       return ExtractedList;
+    }
+
+    public List<string> FilterGeneratedKeywords(
+      List<string> generatedKeywordList,
+      List<string> preKeywords,
+      List<string> conditions,
+      int requestKeywordNumber
+    )
+    {
+      List<string> filteredList = new List<string>();
+      Stack<string> refillList = new Stack<string>();
+
+      List<string> bannedWordsList = preKeywords.Concat(conditions).ToList(); // preKeywords + conditions
+      bannedWordsList.Add("Understood."); // To filter Understood
+
+      // Form the filtered list from the odd keywords first, even keywords go to refill list
+      for (int i = 0; i < generatedKeywordList.Count; i++)
+      {
+        if (i % 2 == 0 && filteredList.Count < requestKeywordNumber)
+        {
+          filteredList.Add(generatedKeywordList[i]);
+        }
+        else
+        {
+          refillList.Push(generatedKeywordList[i]);
+        }
+      }
+
+      while (filteredList.Count < requestKeywordNumber && refillList.Count != 0)
+      {
+        filteredList.Add(refillList.Pop());
+      }
+
+      // Check if the keyword is the same as a banned word
+      for (int i = 0; i < filteredList.Count; ++i)
+      {
+        List<string> tmpList = filteredList.Where((item, index) => index != i).ToList();  // A temp list without the element of the index i
+
+        while ((bannedWordsList.Contains(filteredList[i]) || tmpList.Contains(filteredList[i])) && refillList.Count != 0)
+        {
+          filteredList[i] = refillList.Pop();
+        }
+
+        if (refillList.Count == 0)
+        {
+          break;
+        }
+      }
+
+      return filteredList;
     }
 
     /// <summary>--------------------------------------------- </summary>
@@ -350,14 +420,14 @@ namespace OpenAI
       /// <summary>-------   Try parse with new line    ------- </summary>  
       string[] words = responseContent.Split('\n');
 
-      for (int i = 0 ; i < words.Length ; ++i)
+      for (int i = 0; i < words.Length; ++i)
       {
         int colonIndex = words[i].IndexOf(colon);
         if (colonIndex >= 0)
         {
           words[i] = words[i].Substring(colonIndex + 1);
         }
-        
+
         if (!string.IsNullOrEmpty(words[i]))
         {
           ExtractedList.Add(words[i]);
