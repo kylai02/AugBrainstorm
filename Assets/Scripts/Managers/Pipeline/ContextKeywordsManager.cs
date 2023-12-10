@@ -9,6 +9,8 @@ public class ContextKeywordsManager : MonoBehaviour {
   [HeaderAttribute("-------   Reference    ------- ")]
   [SpaceAttribute(10)]
 
+  public List<string> contextKeywords;
+
   /// <summary>-------   Context page    ------- </summary>
   public int transcriptNum;
 

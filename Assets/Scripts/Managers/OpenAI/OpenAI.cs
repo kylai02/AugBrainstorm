@@ -223,6 +223,8 @@ namespace OpenAI
           Prompts.instance.GenerateKeywordsPrompt(preKeywords, conditions, requestKeywordNumber)
       };
 
+      Debug.Log("Content: \n" + newMessage.Content);
+
       generatedKeywordsMessages.Clear();
       generatedKeywordsMessages.Add(newMessage);
 
