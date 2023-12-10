@@ -160,7 +160,7 @@ namespace OpenAI
       string OpenAIResponse =
         await RequestGeneratedKeywordsOpenAI(preKeywords, conditions, requestKeywordNumber);
 
-      // Debug.Log("Response: \n" + OpenAIResponse + "\n");
+      Debug.Log("Response: \n" + OpenAIResponse + "\n");
 
       List<string> generatedKeywordsList =
         ExtractGeneratedKeywords(OpenAIResponse, 20);
@@ -202,6 +202,8 @@ namespace OpenAI
         Content =
           Prompts.instance.GenerateKeywordsPrompt(preKeywords, conditions, requestKeywordNumber)
       };
+
+      Debug.Log("Content: \n" + newMessage.Content);
 
       generatedKeywordsMessages.Clear();
       generatedKeywordsMessages.Add(newMessage);

@@ -22,7 +22,9 @@ public class KeywordNode : MonoBehaviour {
     }
   }
 
-  void AddNodeToSelectedNode() {
+  public void AddNodeToSelectedNode() {
     UIManager.instance.ChoseSelectedNode(this);
+
+    // Debug.Log("onClick");
   }
 }
