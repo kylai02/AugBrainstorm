@@ -12,6 +12,8 @@ public class SpeechKeywordsManager : MonoBehaviour {
 
   public List<TMP_Text> speechKeywordsText;
   public GameObject conditionBtnsField;
+  public GameObject nextPageBtn;
+  public GameObject prevPageBtn;
 
   [HeaderAttribute("-------   Prefab    ------- ")]
   public GameObject conditionBtnPrefab;
@@ -20,6 +22,9 @@ public class SpeechKeywordsManager : MonoBehaviour {
   public List<string> speechKeywords;
 
   private List<GameObject> _condBtns;
+  
+  private bool _isReviewing;
+  public int _speechIndex;
 
   // Singleton
   public static SpeechKeywordsManager instance;
@@ -27,6 +32,9 @@ public class SpeechKeywordsManager : MonoBehaviour {
   void Awake() {
     if (instance == null) instance = this;
     _condBtns = new List<GameObject>();
+
+    _isReviewing = false;
+    _speechIndex = -1;
   }
 
   void Start() {
@@ -40,7 +48,8 @@ public class SpeechKeywordsManager : MonoBehaviour {
       AddCondition("outdoor");
     }
 
-    updateContextKeywords();
+    UpdatePageButton();
+    UpdateContextKeywords();
     UpdateSpeechKeywordsText();
   }
 
@@ -67,6 +76,18 @@ public class SpeechKeywordsManager : MonoBehaviour {
     AdjustConditionBtnsPos();
   }
 
+  public void NextPage() {
+    _isReviewing = true;
+    _speechIndex -= 4;
+  }
+
+  public void PrevPage() {
+    _speechIndex += 4;
+    if (_speechIndex >= speechKeywords.Count - 1) {
+      _isReviewing = false;
+    }
+  }
+
   private void AdjustConditionBtnsPos() {
     Debug.Log("here");
     for (int i = 0; i < _condBtns.Count; ++i) {
@@ -81,7 +102,7 @@ public class SpeechKeywordsManager : MonoBehaviour {
   }
 
   /// <summary>-------   Generate and place context keywords    -------</summary>
-  private async void updateContextKeywords() {
+  private async void UpdateContextKeywords() {
     /// <summary>-------   Get transcribe from Whisper    -------</summary>
     // Get speech from Whisper, if null then = " "  
     string speechInput = TCPManager.instance.TranscribeFromWhipser() ?? " ";
@@ -114,11 +135,33 @@ public class SpeechKeywordsManager : MonoBehaviour {
   }
 
   private void UpdateSpeechKeywordsText() {
-    for (int i = 0; i < 8; ++i) {
-      int targetIndex = speechKeywords.Count - 1 - i;
+    if (!_isReviewing) _speechIndex = speechKeywords.Count - 1;
 
-      if (targetIndex >= 0)
-          speechKeywordsText[i].text = speechKeywords[targetIndex];
+    for (int i = 0; i < 4; ++i) {
+      int targetIndex = _speechIndex - i;
+
+      if (targetIndex >= 0) {
+        speechKeywordsText[i].text = speechKeywords[targetIndex];
+      }
+      else {
+        speechKeywordsText[i].text = "";
+      }
+    }
+  }
+
+  private void UpdatePageButton() {
+    if (_speechIndex <= 3) {
+      nextPageBtn.SetActive(false);
+    }
+    else {
+      nextPageBtn.SetActive(true);
+    }
+
+    if (_speechIndex <= speechKeywords.Count - 1 - 4) {
+      prevPageBtn.SetActive(true);
+    }
+    else {
+      prevPageBtn.SetActive(false);
     }
   }
 }
