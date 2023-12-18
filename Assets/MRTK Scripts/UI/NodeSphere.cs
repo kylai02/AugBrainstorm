@@ -10,6 +10,9 @@ public class NodeSphere : MonoBehaviour {
   public Material unselectedMat;
   public Material selectedMat;
 
+  public Material onPathMat;
+  public Material notOnPathMat;
+
   public static NodeSphere SelectedNode;
 
   private LineRenderer _lineRenderer;
@@ -21,16 +24,19 @@ public class NodeSphere : MonoBehaviour {
   void Start() {
     _lineRenderer = GetComponent<LineRenderer>();
     _lineRenderer.positionCount = 2;
-    // Button btn = GetComponent<Button>() ?? null;
-    // if (btn) {
-    //   btn.onClick.AddListener(AddNodeToSelectedNode);
-    // }
   }
 
   void Update() {
     if (parent.keyword != "root") {
       _lineRenderer.SetPosition(0, transform.position);
       _lineRenderer.SetPosition(1, parent.transform.position);
+    }
+    
+    if (MainManager.instance.NodePath().Exists(x => x == keyword)) {
+      _lineRenderer.material = onPathMat;
+    }
+    else {
+      _lineRenderer.material = notOnPathMat;
     }
   }
 

@@ -601,6 +601,8 @@ MonoBehaviour:
   children: []
   unselectedMat: {fileID: 2100000, guid: 680505b4b4f3400f9fd3ebb242751819, type: 2}
   selectedMat: {fileID: 2100000, guid: a50237e3265fe9149a16e889fd8d8b4c, type: 2}
+  onPathMat: {fileID: 2100000, guid: a50237e3265fe9149a16e889fd8d8b4c, type: 2}
+  notOnPathMat: {fileID: 2100000, guid: 680505b4b4f3400f9fd3ebb242751819, type: 2}
 --- !u!1 &4761296635217492167
 GameObject:
   m_ObjectHideFlags: 0

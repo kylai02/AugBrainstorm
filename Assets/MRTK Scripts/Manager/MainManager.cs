@@ -13,9 +13,9 @@ public class MainManager : MonoBehaviour {
   [SpaceAttribute(10)]
   // public List<TMP_Text> keywordsText;
   public List<TMP_Text> generatedKeywordsText;
-  // public List<TMP_Text> ideasText;
+  public List<TMP_Text> ideasText;
 
-  // public GameObject ideasField;
+  public GameObject ideasField;
   public GameObject genBtnField;
   public GameObject tree;
   // public GameObject conditionsField;
@@ -185,18 +185,18 @@ public class MainManager : MonoBehaviour {
     }
   }
 
-  // public async void GenerateIdea() {
-  //   generatedIdeas = await OpenAI.OpenAI.instance.GetGeneratedIdeasOpenAI(
-  //     NodePath(),
-  //     3,
-  //     12
-  //   );
+  public async void GenerateIdea() {
+    List<string> generatedIdeas = await OpenAI.OpenAI.instance.GetGeneratedIdeasOpenAI(
+      NodePath(),
+      3,
+      12
+    );
 
-  //   ideasField.SetActive(true);
-  //   for (int i = 0; i < 4; ++i) {
-  //     ideasText[i].text = generatedIdeas[i];
-  //   }
-  // }
+    ideasField.SetActive(true);
+    for (int i = 0; i < 4; ++i) {
+      ideasText[i].text = generatedIdeas[i];
+    }
+  }
   
   public void AddCondition(string condition) {
     genKeywordsConditions.Add(condition);
@@ -207,7 +207,7 @@ public class MainManager : MonoBehaviour {
   }
 
 
-  private List<string> NodePath() {
+  public List<string> NodePath() {
     List<string> arr = new List<string>();
     
     NodeSphere cur = NodeSphere.SelectedNode;
